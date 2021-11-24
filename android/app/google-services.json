@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "705221055670",
+    "project_id": "collab-signin",
+    "storage_bucket": "collab-signin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:705221055670:android:e274a87ac869affb780217",
+        "android_client_info": {
+          "package_name": "com.example.collabApp.collab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "705221055670-3of434b4acsjn8f8pt0qbilcoe6e060m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.collabApp.collab",
+            "certificate_hash": "29f2e66dd339deb9bd36ce73e3b7fbd2bb7d26d5"
+          }
+        },
+        {
+          "client_id": "705221055670-0bc3dsjhh6frkel3vsj3oatjm7u0lg33.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6sY7mXhIXUtzVVJP4PuqgVDdZ33xPvmc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "705221055670-0bc3dsjhh6frkel3vsj3oatjm7u0lg33.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
