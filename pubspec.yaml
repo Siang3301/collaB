@@ -28,19 +28,26 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   flutter_shine: ^0.0.5
-  font_awesome_flutter: ^9.2.0
-  google_sign_in: ^5.2.0
-  cupertino_icons: ^1.0.2
   flutter_svg: ^0.19.1
-  #Firebase
-  firebase_auth: ^3.1.4
-  firebase_core: ^1.8.0
+
   flutter:
     sdk: flutter
 
+  cupertino_icons: ^1.0.2
+
+  #Firebase
+  firebase_core: ^1.8.0
+  firebase_auth: ^3.1.4
+  google_sign_in: ^5.2.0
+  rxdart: ^0.22.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
 
+  #Google Icon
+  font_awesome_flutter: ^9.2.0
+
+  # State Management
+  provider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +59,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

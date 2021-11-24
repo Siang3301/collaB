@@ -1,3 +1,4 @@
+import 'package:collab/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:collab/initial_screens/Login/login_screen.dart';
 import 'package:collab/initial_screens/Signup/components/background.dart';
@@ -8,6 +9,7 @@ import 'package:collab/initial_components/rounded_button.dart';
 import 'package:collab/initial_components/rounded_input_field.dart';
 import 'package:collab/initial_components/rounded_password_field.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class Body extends StatelessWidget {
   @override
@@ -18,25 +20,30 @@ class Body extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+             Container(
+               margin: EdgeInsets.only(top: 120, right: 235),
+               child: Text(
               "SIGNUP",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, fontFamily: 'Raleway'),
+              ),
+             ),
             SizedBox(height: size.height * 0.03),
-            SvgPicture.asset(
-              "assets/icons/signup.svg",
-              height: size.height * 0.35,
-            ),
+            SizedBox(height: size.height * 0.03),
             RoundedInputField(
               hintText: "Your Email",
               onChanged: (value) {},
             ),
+            SizedBox(height: size.height * 0.03),
             RoundedPasswordField(
               onChanged: (value) {},
             ),
+            SizedBox(height: size.height * 0.10),
             RoundedButton(
               text: "SIGNUP",
-              press: () {},
+              press: () {
+                final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+                provider.googleLogin();
+              },
             ),
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck(
@@ -57,18 +64,11 @@ class Body extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SocalIcon(
-                  iconSrc: "assets/icons/facebook.svg",
-                  press: () {},
-                ),
-                SocalIcon(
-                  iconSrc: "assets/icons/twitter.svg",
-                  press: () {},
-                ),
-                SocalIcon(
                   iconSrc: "assets/icons/google-plus.svg",
                   press: () {},
                 ),
               ],
+
             )
           ],
         ),
@@ -76,3 +76,6 @@ class Body extends StatelessWidget {
     );
   }
 }
+
+
+

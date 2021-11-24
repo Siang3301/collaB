@@ -15,17 +15,25 @@ class RoundedInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      onChanged: onChanged,
-      cursorColor: kPrimaryColor,
-      decoration: InputDecoration(
-        icon: Icon(
-          icon,
-          color: kPrimaryColor,
+    return Container(
+      width: 325,
+      padding: EdgeInsets.fromLTRB(10,2,10,2),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(color: Colors.red)
+      ),
+      child: TextField(
+        cursorColor: kPrimaryColor,
+        decoration: InputDecoration(
+          icon: Icon(
+            icon,
+            color: kPrimaryColor,
+          ),
+          border: InputBorder.none,
+          labelText: "Email",
         ),
-        hintText: hintText,
-        border: InputBorder.none,
       ),
     );
   }
 }
+

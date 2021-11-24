@@ -3,6 +3,7 @@ import 'package:collab/initial_screens/Login/login_screen.dart';
 import 'package:collab/initial_screens/Signup/signup_screen.dart';
 import 'package:collab/initial_screens/Welcome/components/background.dart';
 import 'package:collab/initial_components/rounded_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:collab/constants.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -10,6 +11,7 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    User? result = FirebaseAuth.instance.currentUser;
     // This size provide us total height and width of our screen
     return Background(
       child: SingleChildScrollView(
@@ -37,8 +39,12 @@ class Body extends StatelessWidget {
               margin: EdgeInsets.only(left:85),
               child : Text("- Simplify your work -",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, fontFamily: 'Raleway', color: Colors.white)),
             ),
-
-            SizedBox(height: size.height * 0.40),
+            SizedBox(height: size.height * 0.07),
+            Image.asset(
+              "assets/icons/collabLogo.png",
+              height: size.height * 0.30,
+            ),
+            SizedBox(height: size.height * 0.03),
             RoundedButton(
               text: "LOGIN",
               press: () {
@@ -65,6 +71,11 @@ class Body extends StatelessWidget {
                   ),
                 );
               },
+            ),
+            SizedBox(height: size.height * 0.05),
+            Container(
+              alignment: Alignment.center,
+              child : Text("Developed by DevParty @ 2021",style: TextStyle(fontSize: 15, color: Colors.black)),
             ),
           ],
         ),
