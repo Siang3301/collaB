@@ -1,3 +1,7 @@
+import 'package:collab/authenticate_page.dart';
+import 'package:collab/authentication.dart';
+import 'package:collab/initial_screens/Signup/components/or_divider.dart';
+import 'package:collab/main.dart';
 import 'package:flutter/material.dart';
 import 'package:collab/initial_screens/Login/components/background.dart';
 import 'package:collab/initial_screens/Signup/signup_screen.dart';
@@ -5,13 +9,18 @@ import 'package:collab/initial_components/already_have_an_account_acheck.dart';
 import 'package:collab/initial_components/rounded_button.dart';
 import 'package:collab/initial_components/rounded_input_field.dart';
 import 'package:collab/initial_components/rounded_password_field.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class Body extends StatelessWidget {
-  const Body({
-    Key? key,
-  }) : super(key: key);
+class LoginBody extends StatefulWidget{
+  const LoginBody({Key? key}) : super(key: key);
 
+  @override
+  _LoginBody createState() => _LoginBody();
+}
+
+class _LoginBody extends State<LoginBody> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -38,11 +47,49 @@ class Body extends StatelessWidget {
             RoundedPasswordField(
               onChanged: (value) {},
             ),
-            SizedBox(height: size.height * 0.10),
+            SizedBox(height: size.height * 0.05),
             RoundedButton(
               text: "LOGIN",
               press: () {},
             ),
+            OrDivider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ElevatedButton.icon(
+                  style:ElevatedButton.styleFrom(
+                    primary:Colors.white,
+                    onPrimary: Colors.black,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, fontFamily: 'Raleway'),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    side: BorderSide(width: 0.7, color: Colors.deepOrangeAccent),
+                    shadowColor: Colors.deepOrangeAccent,
+                  ),
+                  icon: FaIcon(FontAwesomeIcons.google, color: Colors.red,),
+                  label:Text('Sign In with Google'),
+                  onPressed: () async {
+                    setState(() {
+                    });
+
+                    User? user =
+                    await Authentication.signInWithGoogle(context: context);
+
+                    setState(() {
+                    });
+
+                    if (user != null) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => bottomNavigationBar(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck(
               press: () {
@@ -62,3 +109,29 @@ class Body extends StatelessWidget {
     );
   }
 }
+
+Future navigateToHomePage(context) async {
+  final googleSignIn = GoogleSignIn();
+  final googleUser = await googleSignIn.signIn();
+  if (googleUser != null) {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => bottomNavigationBar()));
+  }
+  else {
+    return;
+  }
+}
+
+void signInWithGoogle(BuildContext context) async {
+  final googleSignIn = GoogleSignIn();
+  final googleUser = await googleSignIn.signIn();
+  if (googleUser != null) {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AuthenticatePage()));
+  }
+  else {
+    return;
+  }
+}
+
+
+
+

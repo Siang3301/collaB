@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'HomePage.dart';
 
 class Projects extends StatefulWidget{
+  const Projects({Key? key}) : super(key: key);
+
+  @override
   _ProjectsState createState() => _ProjectsState();
 }
 
 class _ProjectsState extends State<Projects>{
+  @override
   Widget build(BuildContext context){
-    return new Scaffold(
-      appBar : new AppBar(
-          title : new Text("Projects"),
+    return Scaffold(
+      appBar : AppBar(
+          title : const Text("Projects"),
           backgroundColor: Colors.indigo,
           automaticallyImplyLeading: true,
-          leading: IconButton(icon: Icon(Icons.arrow_back_ios),
-          onPressed:() => HomePage(),
-          ),
       ),
-        body : new Container(
+        body : Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Color.fromRGBO(1, 89, 99, 1.0), Colors.grey],
@@ -24,7 +24,7 @@ class _ProjectsState extends State<Projects>{
               end: Alignment.topRight,
             ),
           ),
-          child : Center(
+          child : const Center(
                 child : Text("Projects page."),
           )
         )

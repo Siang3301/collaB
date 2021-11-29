@@ -1,9 +1,10 @@
+import 'package:collab/authenticate_page.dart';
 import 'package:collab/google_sign_in.dart';
-import 'package:collab/initial_screens/Welcome/welcome_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import './app_screens/HomePage.dart';
-import './app_screens/Projects.dart';
-import './app_screens/PersonalSpaces.dart';
+import './app_screens/home_page.dart';
+import './app_screens/projects.dart';
+import './app_screens/personal_spaces.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -16,37 +17,42 @@ Future main() async{
 }
 
 class Collab extends StatelessWidget{
+  const Collab({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
     create: (context) => GoogleSignInProvider(),
     // TODO: implement build
-    child: new MaterialApp(
+    child: MaterialApp(
       debugShowCheckedModeBanner: false,
-      home : WelcomeScreen(),
+      home : AuthenticatePage(),
     ),
   );
 }
 
+// ignore: camel_case_types
 class bottomNavigationBar extends StatefulWidget{
   const bottomNavigationBar({Key? key}) : super(key: key);
 
+  @override
   _bottomNavigationBar createState() => _bottomNavigationBar();
 }
 
+// ignore: camel_case_types
 class _bottomNavigationBar extends State<bottomNavigationBar>{
-
+  final user = FirebaseAuth.instance.currentUser!;
   int _currentIndex = 0;
 
   final tabs = [
-    Center(child:Text('Feeds')),
-    Center(child:Text('Projects')),
-    Center(child:Text('Personal Spaces')),
+    const Center(child:Text('Feeds')),
+    const Center(child:Text('Projects')),
+    const Center(child:Text('Personal Spaces')),
   ];
 
   final List<Widget> _children = [
-    HomePage(),
-    Projects(),
-    PersonalSpaces(),
+    const HomePage(),
+    const Projects(),
+    const PersonalSpaces(),
   ];
 
   void onTappedBar(int index){
@@ -58,7 +64,7 @@ class _bottomNavigationBar extends State<bottomNavigationBar>{
 
   @override
   Widget build(BuildContext context) {
-      return new Scaffold(
+      return Scaffold(
           body: _children[_currentIndex],
           bottomNavigationBar : BottomNavigationBar(
           currentIndex: _currentIndex,
@@ -70,7 +76,7 @@ class _bottomNavigationBar extends State<bottomNavigationBar>{
           unselectedFontSize: 13,
           onTap: onTappedBar,
 
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.add_alert_outlined),
               label: "Feeds",),

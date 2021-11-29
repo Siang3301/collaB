@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:collab/constants.dart';
 
 class RoundedButton extends StatelessWidget {
   final String text;
   final Function()? press;
+  // ignore: prefer_typing_uninitialized_variables
   final textColor;
   const RoundedButton({
     Key? key,
@@ -19,7 +19,7 @@ class RoundedButton extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
-      width: size.width * 0.65,
+      width: size.width * 0.62,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(29),
         child: newElevatedButton(),

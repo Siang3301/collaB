@@ -3,15 +3,13 @@ import 'package:collab/initial_screens/Login/login_screen.dart';
 import 'package:collab/initial_screens/Signup/signup_screen.dart';
 import 'package:collab/initial_screens/Welcome/components/background.dart';
 import 'package:collab/initial_components/rounded_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:collab/constants.dart';
-import 'package:flutter_svg/svg.dart';
 
 class Body extends StatelessWidget {
+  const Body({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    User? result = FirebaseAuth.instance.currentUser;
     // This size provide us total height and width of our screen
     return Background(
       child: SingleChildScrollView(
@@ -21,8 +19,8 @@ class Body extends StatelessWidget {
             SizedBox(height: size.height * 0.08),
             Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.only(right:185),
-            child: Text(
+              margin: const EdgeInsets.only(right:185),
+            child: const Text(
               "collaB",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35, fontFamily: 'Raleway', color: Colors.white, shadows: [
                 Shadow(
@@ -37,7 +35,7 @@ class Body extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               margin: EdgeInsets.only(left:85),
-              child : Text("- Simplify your work -",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, fontFamily: 'Raleway', color: Colors.white)),
+              child : const Text("- Simplify your work -",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, fontFamily: 'Raleway', color: Colors.white)),
             ),
             SizedBox(height: size.height * 0.07),
             Image.asset(
@@ -75,7 +73,7 @@ class Body extends StatelessWidget {
             SizedBox(height: size.height * 0.05),
             Container(
               alignment: Alignment.center,
-              child : Text("Developed by DevParty @ 2021",style: TextStyle(fontSize: 15, color: Colors.black)),
+              child : const Text("Developed by DevParty @ 2021",style: TextStyle(fontSize: 15, color: Colors.black)),
             ),
           ],
         ),
