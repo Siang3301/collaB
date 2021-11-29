@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'HomePage.dart';
 
 class PersonalSpaces extends StatefulWidget{
+  const PersonalSpaces({Key? key}) : super(key: key);
+
+  @override
   _PersonalSpacesState createState() => _PersonalSpacesState();
 }
 
 class _PersonalSpacesState extends State<PersonalSpaces>{
+  @override
   Widget build(BuildContext context){
-    return new Scaffold(
-        appBar : new AppBar(
-          title : new Text("PersonalSpaces"),
+    return Scaffold(
+        appBar : AppBar(
+          title : const Text("PersonalSpaces"),
           backgroundColor: Colors.indigo,
           automaticallyImplyLeading: true,
-          leading: IconButton(icon: Icon(Icons.arrow_back_ios),
-            onPressed:() => HomePage(),
-          ),
         ),
-        body : new Container(
+        body : Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [Color.fromRGBO(1, 89, 99, 1.0), Colors.grey],
@@ -24,10 +24,11 @@ class _PersonalSpacesState extends State<PersonalSpaces>{
                 end: Alignment.topRight,
               ),
             ),
-            child : Center(
+            child : const Center(
               child : Text("PersonalSpaces page."),
             )
-        )
+        ),
+
     );
   }
 }
