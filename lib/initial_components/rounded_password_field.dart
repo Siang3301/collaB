@@ -31,8 +31,9 @@ class _RoundedPasswordFieldState extends State<RoundedPasswordField> {
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: Colors.red)
       ),
-      child: TextField(
+      child: TextFormField(
         obscureText: !_passwordVisible,
+        validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
         onChanged: widget.onChanged,
         cursorColor: kPrimaryColor,
         decoration: InputDecoration(

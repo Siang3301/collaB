@@ -1,11 +1,13 @@
 import 'package:collab/google_sign_in.dart';
 import 'package:collab/initial_screens/Welcome/welcome_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // ignore: camel_case_types
 class profilePage extends StatelessWidget{
-  const profilePage({Key? key}) : super(key: key);
+  profilePage({Key? key}) : super(key: key);
+  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,7 @@ class profilePage extends StatelessWidget{
             onPressed: (){
               final provider = Provider.of<GoogleSignInProvider>(context,listen:false);
               provider.logout();
+              auth.signOut();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => WelcomeScreen()),

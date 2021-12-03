@@ -1,12 +1,15 @@
 import 'package:collab/authenticate_page.dart';
 import 'package:collab/google_sign_in.dart';
+import 'package:collab/initial_screens/Login/login_screen.dart';
+import 'package:collab/initial_screens/Signup/signup_screen.dart';
+import 'package:collab/initial_screens/Welcome/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './app_screens/home_page.dart';
 import './app_screens/projects.dart';
 import './app_screens/personal_spaces.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'google_sign_in.dart';
+import 'email_auth.dart';
 import 'package:provider/provider.dart';
 
 Future main() async{
@@ -22,13 +25,34 @@ class Collab extends StatelessWidget{
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
     create: (context) => GoogleSignInProvider(),
-    // TODO: implement build
-    child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home : AuthenticatePage(),
+    child: MultiProvider(
+      providers: [
+        // 2
+        Provider<EmailAuthentication>(
+          create: (_) => EmailAuthentication(FirebaseAuth.instance),
+        ),
+        // 3
+        StreamProvider(
+          create: (context) => context.read<EmailAuthentication>().authStateChanges,
+          initialData: null,
+        )
+      ],
+      // TODO: implement build
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => AuthenticatePage(),
+          '/main': (context) => WelcomeScreen(),
+          '/signin': (context) => LoginScreen(),
+          '/signup': (context) => SignUpScreen(),
+          '/home': (context) => bottomNavigationBar(),
+        }
+      ),
     ),
   );
 }
+
 
 // ignore: camel_case_types
 class bottomNavigationBar extends StatefulWidget{

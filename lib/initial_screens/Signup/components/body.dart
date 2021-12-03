@@ -1,4 +1,7 @@
+import 'package:collab/authenticate_page.dart';
 import 'package:collab/google_sign_in.dart';
+import 'package:collab/initial_components/rounded_name_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:collab/initial_screens/Login/login_screen.dart';
 import 'package:collab/initial_screens/Signup/components/background.dart';
@@ -9,9 +12,24 @@ import 'package:collab/initial_components/rounded_input_field.dart';
 import 'package:collab/initial_components/rounded_password_field.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:collab/email_auth.dart';
 
-class Body extends StatelessWidget {
-  const Body({Key? key}) : super(key: key);
+class SignupBody extends StatefulWidget{
+  const SignupBody({Key? key}) : super(key: key);
+
+  @override
+  _SignupBody createState() => _SignupBody();
+}
+
+
+class _SignupBody extends State<SignupBody> {
+  final auth = FirebaseAuth.instance;
+  String error = '';
+
+  // text field state
+  String email = '';
+  String password = '';
+  String name = '';
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +40,7 @@ class Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
              Container(
-               margin: EdgeInsets.only(top: 120, right: 235),
+               margin: EdgeInsets.only(top: 70, right: 235),
                child: Text(
               "SIGNUP",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, fontFamily: 'Raleway'),
@@ -31,18 +49,42 @@ class Body extends StatelessWidget {
             SizedBox(height: size.height * 0.03),
             SizedBox(height: size.height * 0.03),
             RoundedInputField(
-              hintText: "Your Email",
-              onChanged: (value) {},
+              onChanged: (value) {
+                setState(() {
+                  email = value.trim();
+                });
+              },
+            ),
+            SizedBox(height: size.height * 0.03),
+            RoundedNameField(
+              onChanged: (value) {
+                setState(() {
+                  name = value.trim();
+                });
+              },
             ),
             SizedBox(height: size.height * 0.03),
             RoundedPasswordField(
-              onChanged: (value) {},
+              onChanged: (value) {
+                setState(() {
+                  password = value.trim();
+                });
+              },
             ),
             SizedBox(height: size.height * 0.05),
             RoundedButton(
               text: "SIGNUP",
-              press: () {
-              },
+                press: ()async {
+                  final result = await context
+                      .read<EmailAuthentication>()
+                      .signUp(
+                    email: email.trim(),
+                    password: password.trim(),
+                    name: name.trim(),
+                  );
+                  if (result == "Signed up") {
+                    _showDialog(context);
+                  }},
             ),
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck(
@@ -74,9 +116,31 @@ class Body extends StatelessWidget {
                   ),
                   icon: FaIcon(FontAwesomeIcons.google, color: Colors.red,),
                   label:Text('Sign Up with Google'),
-                  onPressed: () {
+                  onPressed: () async {
                     final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
                     provider.googleLogin();
+                    final user = FirebaseAuth.instance.currentUser;
+
+                    if(user != null){
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('Successfully sign-up!'),
+                            action: SnackBarAction(
+                              label: 'Login now!',
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return AuthenticatePage();
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                      );
+                    }
                   },
                 ),
               ],
@@ -86,6 +150,28 @@ class Body extends StatelessWidget {
       ),
     );
   }
+
+  void _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Alert!!"),
+          content: Text("Account created successfully."),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.pushReplacementNamed(
+                    context, '/');
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }
 
 

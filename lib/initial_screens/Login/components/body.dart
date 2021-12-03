@@ -1,5 +1,7 @@
+// ignore_for_file: implementation_imports
 import 'package:collab/authenticate_page.dart';
-import 'package:collab/authentication.dart';
+import 'package:collab/google_sign_up.dart';
+import 'package:collab/email_auth.dart';
 import 'package:collab/initial_screens/Signup/components/or_divider.dart';
 import 'package:collab/main.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:collab/initial_components/rounded_password_field.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/src/provider.dart';
 
 class LoginBody extends StatefulWidget{
   const LoginBody({Key? key}) : super(key: key);
@@ -21,6 +24,9 @@ class LoginBody extends StatefulWidget{
 }
 
 class _LoginBody extends State<LoginBody> {
+  String _email = "", _password = "";
+  final auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -40,17 +46,43 @@ class _LoginBody extends State<LoginBody> {
 
             SizedBox(height: size.height * 0.03),
             RoundedInputField(
-              hintText: "Your Email",
-              onChanged: (value) {},
+              onChanged: (value) {
+                setState(() {
+                  _email = value.trim();
+                });
+              },
             ),
             SizedBox(height: size.height * 0.03),
             RoundedPasswordField(
-              onChanged: (value) {},
+              onChanged: (value) {
+                setState(() {
+                  _password = value.trim();
+                });
+              },
             ),
             SizedBox(height: size.height * 0.05),
             RoundedButton(
               text: "LOGIN",
-              press: () {},
+              press: () async{
+                setState(() {
+                });
+
+                String? user = await context.read<EmailAuthentication>()
+                    .signIn(
+                  email: _email.trim(),
+                  password: _password.trim(),
+                );
+
+                setState(() {
+                });
+                if (user != null) {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => bottomNavigationBar(),
+                    ),
+                  );
+                }
+              },
             ),
             OrDivider(),
             Row(
@@ -73,7 +105,7 @@ class _LoginBody extends State<LoginBody> {
                     });
 
                     User? user =
-                    await Authentication.signInWithGoogle(context: context);
+                    await GoogleAuthentication.signInWithGoogle(context: context);
 
                     setState(() {
                     });

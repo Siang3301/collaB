@@ -28,6 +28,17 @@ class GoogleSignInProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  static SnackBar customSnackBar({required String content}) {
+    return SnackBar(
+      backgroundColor: Colors.black,
+      content: Text(
+        content,
+        style: const TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
+      ),
+    );
+  }
+
+
   Future logout() async{
     await googleSignIn.disconnect();
     FirebaseAuth.instance.signOut();
@@ -35,12 +46,12 @@ class GoogleSignInProvider extends ChangeNotifier{
 
 }
 
-abstract class BaseAuth{
+/*abstract class BaseAuth{
   Future<String> signInWithEmailAndPassword(String email,String password);
   Future<String> createUserWithEmailAndPassword(String email,String password);
 }
 
-/*class Auth implements GoogleAuth{
+class Auth implements GoogleAuth{
   Future<String> signInWithEmailAndPassword(String email, String password) async{
     final user = await FirebaseAuth.instance.currentUser!;
     return user.uid;

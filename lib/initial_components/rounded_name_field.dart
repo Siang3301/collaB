@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:collab/constants.dart';
 
-class RoundedInputField extends StatefulWidget {
+class RoundedNameField extends StatefulWidget {
   final ValueChanged<String> onChanged;
-  
-  const RoundedInputField({
+
+  const RoundedNameField({
     Key? key,
     required this.onChanged,
   }) : super(key: key);
 
   @override
-  State<RoundedInputField> createState() => _RoundedInputField();
+  State<RoundedNameField> createState() => _RoundedNameField();
 }
 
-class _RoundedInputField extends State<RoundedInputField> {
-  IconData? get icon => Icons.mail;
+class _RoundedNameField extends State<RoundedNameField> {
+  IconData? get icon => Icons.person;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +35,9 @@ class _RoundedInputField extends State<RoundedInputField> {
             color: kPrimaryColor,
           ),
           border: InputBorder.none,
-          labelText: "Email",
+          labelText: "Username",
         ),
       ),
     );
   }
 }
-

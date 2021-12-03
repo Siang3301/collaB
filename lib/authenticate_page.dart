@@ -1,4 +1,4 @@
-import 'package:collab/initial_screens/welcome/welcome_screen.dart';
+import 'package:collab/initial_screens/Welcome/welcome_screen.dart';
 import 'package:collab/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ class AuthenticatePage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) => Scaffold(
+
     // TODO: implement build
     body: StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
@@ -24,4 +25,16 @@ class AuthenticatePage extends StatelessWidget{
       }
       ),
   );
+
 }
+
+// class AuthenticationWrapper extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final firebaseuser = context.watch<User>();
+//     if (firebaseuser != null) {
+//       return bottomNavigationBar();
+//     }
+//     return WelcomeScreen();
+//   }
+// }
