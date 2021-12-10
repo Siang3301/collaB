@@ -1,5 +1,5 @@
 import 'package:collab/authenticate_page.dart';
-import 'package:collab/google_sign_in.dart';
+import 'package:collab/google_sign_up.dart';
 import 'package:collab/initial_screens/Login/login_screen.dart';
 import 'package:collab/initial_screens/Signup/signup_screen.dart';
 import 'package:collab/initial_screens/Welcome/welcome_screen.dart';
@@ -19,38 +19,44 @@ Future main() async{
   runApp(Collab());
 }
 
-class Collab extends StatelessWidget{
+class Collab extends StatelessWidget {
   const Collab({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-    create: (context) => GoogleSignInProvider(),
-    child: MultiProvider(
+  Widget build(BuildContext context) {
+    return MultiProvider(
       providers: [
         // 2
         Provider<EmailAuthentication>(
           create: (_) => EmailAuthentication(FirebaseAuth.instance),
         ),
+
+        Provider<GoogleAuthentication>(
+          create: (context) => GoogleAuthentication(),
+        ),
         // 3
         StreamProvider(
-          create: (context) => context.read<EmailAuthentication>().authStateChanges,
+          create: (context) =>
+          context
+              .read<EmailAuthentication>()
+              .authStateChanges,
           initialData: null,
-        )
+        ),
       ],
       // TODO: implement build
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        initialRoute: '/',
-        routes: {
-          '/': (context) => AuthenticatePage(),
-          '/main': (context) => WelcomeScreen(),
-          '/signin': (context) => LoginScreen(),
-          '/signup': (context) => SignUpScreen(),
-          '/home': (context) => bottomNavigationBar(),
-        }
+          debugShowCheckedModeBanner: false,
+          initialRoute: '/',
+          routes: {
+            '/': (context) => AuthenticatePage(),
+            '/main': (context) => WelcomeScreen(),
+            '/signin': (context) => LoginScreen(),
+            '/signup': (context) => SignUpScreen(),
+            '/home': (context) => bottomNavigationBar(),
+          }
       ),
-    ),
-  );
+    );
+  }
 }
 
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:collab/constants.dart';
+import 'package:string_validator/string_validator.dart';
 
 class RoundedNameField extends StatefulWidget {
   final ValueChanged<String> onChanged;
@@ -26,6 +27,14 @@ class _RoundedNameField extends State<RoundedNameField> {
           border: Border.all(color: Colors.red)
       ),
       child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your username';
+          } else if (!isAlpha(value)) {
+            return 'Only Letters Please';
+          }
+          return null;
+        },
         keyboardType: TextInputType.emailAddress,
         onChanged: widget.onChanged,
         cursorColor: kPrimaryColor,

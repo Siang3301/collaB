@@ -1,5 +1,5 @@
+import 'package:collab/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 
 //Email Login
 class EmailAuthentication {
@@ -26,8 +26,12 @@ class EmailAuthentication {
   // 4
   Future<String?> signUp({required String email, required String password, required String name}) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       _firebaseAuth.currentUser!.updateDisplayName(name);
+      User? user = result.user;
+
+      await DatabaseService(uid: user!.uid).updateUserData(name, '01x-xxxxxxx', 'Edit yourself now!');
+
       return "Signed up";
     } on FirebaseAuthException catch(e) {
       return e.message;

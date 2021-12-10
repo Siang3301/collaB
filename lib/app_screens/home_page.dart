@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:collab/app_screens/profile_page.dart';
+import 'package:collab/profile_screens/user/user.dart' as u;
 
 class HomePage extends StatefulWidget{
   const HomePage({Key? key}) : super(key: key);
@@ -11,10 +13,11 @@ class HomePage extends StatefulWidget{
 
 class _HomePage extends State<HomePage>{
   get onPressed => null;
+  u.User user = u.User("","","","","");
+  final TextEditingController _userNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
 
     return Scaffold(
         appBar : AppBar(leading: const Icon(Icons.search),
@@ -51,14 +54,23 @@ class _HomePage extends State<HomePage>{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0),
-                child: Text('Welcome Back, \n'+ user.displayName!,
-                    style: const TextStyle(
-                        color: Colors.white70,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30.0)),
-              ),
+              FutureBuilder(
+                  future: _getProfileData(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      _userNameController.text = user.username;
+                    }
+                    return Container(
+                      margin: const EdgeInsets.only(
+                          top: 10.0, bottom: 10.0, left: 20.0),
+                      child: Text('Welcome Back, \n' + user.username,
+                          style: const TextStyle(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30.0)),
+                    );
+                  }
+    ),
 
               Container(
                   margin: const EdgeInsets.only(top: 170.0, bottom: 100.0, left:50.0),
@@ -75,6 +87,19 @@ class _HomePage extends State<HomePage>{
 
     );
   }
+
+    _getProfileData() async{
+    final user1 = FirebaseAuth.instance.currentUser!;
+    final uid = user1.uid;
+    await FirebaseFirestore.instance
+        .collection('users_data')
+        .doc(uid)
+        .get().then((result) {
+    user.username = result.data()!['username'];
+    user.phone = result.data()!['phone'];
+    user.bio = result.data()!['bio'];
+    });
+    }
 }
 
 

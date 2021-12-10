@@ -1,15 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collab/database.dart';
 import 'package:collab/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleAuthentication {
+class GoogleAuthentication extends ChangeNotifier{
+  static final GoogleSignIn googleSignIn = GoogleSignIn();
+
   static Future<User?> signInWithGoogle({required BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
-
-    final GoogleSignIn googleSignIn = GoogleSignIn();
 
     final GoogleSignInAccount? googleSignInAccount =
     await googleSignIn.signIn();
@@ -24,9 +26,23 @@ class GoogleAuthentication {
       );
 
       try {
+
         final UserCredential userCredential =
         await auth.signInWithCredential(credential);
         user = userCredential.user;
+
+        //get user data from firestore
+        final snapShot = await FirebaseFirestore.instance
+            .collection('users_data')
+            .doc(user!.uid) // varuId in your case
+            .get();
+
+        // ignore: unnecessary_null_comparison
+        if (snapShot == null || !snapShot.exists) {
+          // Document with id == varuId doesn't exist.
+          await DatabaseService(uid: user.uid).updateUserData(user.displayName!, '01x-xxxxxxx', 'Edit yourself now!');
+          // You can add data to Firebase Firestore here
+        }
 
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
@@ -51,7 +67,6 @@ class GoogleAuthentication {
           ),
         );
       }
-
       return user;
     }
   }
@@ -85,6 +100,10 @@ class GoogleAuthentication {
     return firebaseApp;
   }
 
+  static Future<void> logout() async {
+    await googleSignIn.disconnect();
+    FirebaseAuth.instance.signOut();
+  }
 
 }
 

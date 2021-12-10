@@ -4,6 +4,7 @@ import 'package:collab/google_sign_up.dart';
 import 'package:collab/email_auth.dart';
 import 'package:collab/initial_screens/Signup/components/or_divider.dart';
 import 'package:collab/main.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:collab/initial_screens/Login/components/background.dart';
 import 'package:collab/initial_screens/Signup/signup_screen.dart';
@@ -24,14 +25,18 @@ class LoginBody extends StatefulWidget{
 }
 
 class _LoginBody extends State<LoginBody> {
+  final _formKey = GlobalKey<FormState>();
   String _email = "", _password = "";
   final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Background(
-    child: SingleChildScrollView(
+    return Scaffold(
+    body: Form(
+        key: _formKey,
+        child:Background(
+        child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -66,21 +71,25 @@ class _LoginBody extends State<LoginBody> {
               press: () async{
                 setState(() {
                 });
-
-                String? user = await context.read<EmailAuthentication>()
-                    .signIn(
-                  email: _email.trim(),
-                  password: _password.trim(),
-                );
-
-                setState(() {
-                });
-                if (user != null) {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => bottomNavigationBar(),
-                    ),
+                if (_formKey.currentState!.validate() &&
+                EmailValidator.validate(
+                _email.trim())) {
+                  String? user = await context.read<EmailAuthentication>()
+                      .signIn(
+                    email: _email.trim(),
+                    password: _password.trim(),
                   );
+                  setState(() {});
+                  if (user != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('Login Successful'),));
+                          Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => bottomNavigationBar(),
+                      ),
+                    );
+                  }
                 }
               },
             ),
@@ -111,6 +120,9 @@ class _LoginBody extends State<LoginBody> {
                     });
 
                     if (user != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('Login Successful'),));
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => bottomNavigationBar(),
@@ -138,6 +150,8 @@ class _LoginBody extends State<LoginBody> {
           ],
         ),
     ),
+    )
+    )
     );
   }
 }

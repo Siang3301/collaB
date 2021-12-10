@@ -1,6 +1,6 @@
-import 'package:collab/authenticate_page.dart';
-import 'package:collab/google_sign_in.dart';
+import 'package:collab/google_sign_up.dart';
 import 'package:collab/initial_components/rounded_name_field.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:collab/initial_screens/Login/login_screen.dart';
@@ -23,6 +23,7 @@ class SignupBody extends StatefulWidget{
 
 
 class _SignupBody extends State<SignupBody> {
+  final _formKey = GlobalKey<FormState>();
   final auth = FirebaseAuth.instance;
   String error = '';
 
@@ -34,7 +35,10 @@ class _SignupBody extends State<SignupBody> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Background(
+    return Scaffold(
+        body: Form(
+        key: _formKey,
+        child:Background(
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -74,17 +78,21 @@ class _SignupBody extends State<SignupBody> {
             SizedBox(height: size.height * 0.05),
             RoundedButton(
               text: "SIGNUP",
-                press: ()async {
-                  final result = await context
-                      .read<EmailAuthentication>()
-                      .signUp(
-                    email: email.trim(),
-                    password: password.trim(),
-                    name: name.trim(),
-                  );
-                  if (result == "Signed up") {
-                    _showDialog(context);
-                  }},
+                press: () async {
+                  if (_formKey.currentState!.validate() &&
+                      EmailValidator.validate(email.trim())) {
+                    final result = await context
+                        .read<EmailAuthentication>()
+                        .signUp(
+                      email: email.trim(),
+                      password: password.trim(),
+                      name: name.trim(),
+                    );
+                    if (result == "Signed up") {
+                      _showDialog(context);
+                    }
+                  }
+                },
             ),
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck(
@@ -117,9 +125,14 @@ class _SignupBody extends State<SignupBody> {
                   icon: FaIcon(FontAwesomeIcons.google, color: Colors.red,),
                   label:Text('Sign Up with Google'),
                   onPressed: () async {
-                    final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
-                    provider.googleLogin();
-                    final user = FirebaseAuth.instance.currentUser;
+                    setState(() {
+                    });
+
+                    User? user =
+                    await GoogleAuthentication.signInWithGoogle(context: context);
+
+                    setState(() {
+                    });
 
                     if(user != null){
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -132,7 +145,7 @@ class _SignupBody extends State<SignupBody> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      return AuthenticatePage();
+                                      return LoginScreen();
                                     },
                                   ),
                                 );
@@ -148,6 +161,8 @@ class _SignupBody extends State<SignupBody> {
           ],
         ),
       ),
+    )
+        )
     );
   }
 
@@ -162,8 +177,14 @@ class _SignupBody extends State<SignupBody> {
             TextButton(
               child: Text("OK"),
               onPressed: () {
-                Navigator.pushReplacementNamed(
-                    context, '/');
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return LoginScreen();
+                    },
+                  ),
+                );
               },
             ),
           ],

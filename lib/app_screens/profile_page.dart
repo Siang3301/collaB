@@ -1,12 +1,20 @@
-import 'package:collab/google_sign_in.dart';
+import 'package:collab/google_sign_up.dart';
 import 'package:collab/initial_screens/Welcome/welcome_screen.dart';
+import 'package:collab/profile_screens/pages/profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 // ignore: camel_case_types
-class profilePage extends StatelessWidget{
-  profilePage({Key? key}) : super(key: key);
+class profilePage extends StatefulWidget{
+  const profilePage({Key? key}) : super(key: key);
+
+  @override
+  _profilePage createState() => _profilePage();
+}
+
+// ignore: camel_case_types
+class _profilePage extends State<profilePage>{
+
   final auth = FirebaseAuth.instance;
 
   @override
@@ -17,19 +25,22 @@ class profilePage extends StatelessWidget{
         title: const Text("Profile"),
         actions: [
           TextButton(
-            child: const Text('Logout'),
+            child: const Text('Logout', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
             onPressed: (){
-              final provider = Provider.of<GoogleSignInProvider>(context,listen:false);
-              provider.logout();
+              GoogleAuthentication.logout();
               auth.signOut();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => WelcomeScreen()),
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (BuildContext context) => WelcomeScreen()),
+                  ModalRoute.withName('/')
               );
             },
           )
         ]
+
+
       ),
+      body: ProfileView(),
     );
 
   }

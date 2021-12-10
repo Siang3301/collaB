@@ -14,7 +14,7 @@ class _PersonalSpacesState extends State<PersonalSpaces>{
         appBar : AppBar(
           title : const Text("PersonalSpaces"),
           backgroundColor: Colors.indigo,
-          automaticallyImplyLeading: true,
+          automaticallyImplyLeading: false,
         ),
         body : Container(
             decoration: const BoxDecoration(

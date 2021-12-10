@@ -14,7 +14,7 @@ class _ProjectsState extends State<Projects>{
       appBar : AppBar(
           title : const Text("Projects"),
           backgroundColor: Colors.indigo,
-          automaticallyImplyLeading: true,
+          automaticallyImplyLeading: false,
       ),
         body : Container(
           decoration: const BoxDecoration(

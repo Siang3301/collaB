@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:collab/constants.dart';
 
@@ -26,6 +27,15 @@ class _RoundedInputField extends State<RoundedInputField> {
           border: Border.all(color: Colors.red)
       ),
       child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your email';
+          }
+          if (!EmailValidator.validate(value)){
+            return 'Please enter a valid email';
+          }
+          return null;
+        },
         keyboardType: TextInputType.emailAddress,
         onChanged: widget.onChanged,
         cursorColor: kPrimaryColor,
