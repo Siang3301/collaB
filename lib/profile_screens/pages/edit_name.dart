@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collab/profile_screens/widgets/appbar_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:string_validator/string_validator.dart';
 import 'package:collab/profile_screens/user/user.dart' as u;
 
 // This class handles the Page to edit the Name Section of the User Profile.
@@ -43,7 +42,7 @@ class EditNameFormPageState extends State<EditNameFormPage> {
                     "What's Your Name?",
                     style: TextStyle(
                       fontSize: 25,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.bold, fontFamily: 'Raleway'
                     ),
                   )),
               Row(
@@ -60,7 +59,8 @@ class EditNameFormPageState extends State<EditNameFormPage> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your first name';
-                              } else if (!isAlpha(value)) {
+                              }
+                              else if (!value.contains(RegExp(r'[a-zA-Z ]'))) {
                                 return 'Only Letters Please';
                               }
                               return null;
@@ -79,7 +79,8 @@ class EditNameFormPageState extends State<EditNameFormPage> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your last name';
-                              } else if (!isAlpha(value)) {
+                              }
+                              else if (!value.contains(RegExp(r'[a-zA-Z ]'))) {
                                 return 'Only Letters Please';
                               }
                               return null;
@@ -105,9 +106,7 @@ class EditNameFormPageState extends State<EditNameFormPage> {
                             user.username = firstNameController.text + " " + secondNameController.text;
                             setState(() {});
                             // Validate returns true if the form is valid, or false otherwise.
-                            if (_formKey.currentState!.validate() &&
-                                isAlpha(firstNameController.text +
-                                    secondNameController.text)) {
+                            if (_formKey.currentState!.validate()) {
                               final user1 = FirebaseAuth.instance.currentUser!;
                               final uid = user1.uid;
                               await FirebaseFirestore.instance

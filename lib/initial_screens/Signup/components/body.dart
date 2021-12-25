@@ -1,4 +1,3 @@
-import 'package:collab/google_sign_up.dart';
 import 'package:collab/initial_components/rounded_name_field.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,8 +10,8 @@ import 'package:collab/initial_components/rounded_button.dart';
 import 'package:collab/initial_components/rounded_input_field.dart';
 import 'package:collab/initial_components/rounded_password_field.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:collab/email_auth.dart';
+import 'package:collab/widgets/provider_widgets.dart';
+
 
 class SignupBody extends StatefulWidget{
   const SignupBody({Key? key}) : super(key: key);
@@ -24,7 +23,6 @@ class SignupBody extends StatefulWidget{
 
 class _SignupBody extends State<SignupBody> {
   final _formKey = GlobalKey<FormState>();
-  final auth = FirebaseAuth.instance;
   String error = '';
 
   // text field state
@@ -34,6 +32,7 @@ class _SignupBody extends State<SignupBody> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of(context)!.auth;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: Form(
@@ -81,8 +80,8 @@ class _SignupBody extends State<SignupBody> {
                 press: () async {
                   if (_formKey.currentState!.validate() &&
                       EmailValidator.validate(email.trim())) {
-                    final result = await context
-                        .read<EmailAuthentication>()
+                    final result = await
+                        auth
                         .signUp(
                       email: email.trim(),
                       password: password.trim(),
@@ -129,7 +128,7 @@ class _SignupBody extends State<SignupBody> {
                     });
 
                     User? user =
-                    await GoogleAuthentication.signInWithGoogle(context: context);
+                    await auth.signInWithGoogle(context: context);
 
                     setState(() {
                     });

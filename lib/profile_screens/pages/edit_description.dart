@@ -46,7 +46,7 @@ class _EditDescriptionFormPageState extends State<EditDescriptionFormPage> {
                     child: const Text(
                       "Describe yourself",
                       style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold, fontFamily: 'Raleway'),
                     )),
                 Padding(
                     padding: EdgeInsets.all(20),
@@ -71,7 +71,7 @@ class _EditDescriptionFormPageState extends State<EditDescriptionFormPage> {
                                   EdgeInsets.fromLTRB(10, 15, 10, 100),
                               hintMaxLines: 3,
                               hintText:
-                                  'Write a little bit about yourself. Do you like chatting? Are you a smoker? Do you bring pets with you? Etc.'),
+                                  'Write a little bit about yourself. What is your position? What is your characteristics? Are you a collaborator? Etc.'),
                         ))),
                 Padding(
                     padding: EdgeInsets.only(top: 50),

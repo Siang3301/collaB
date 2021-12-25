@@ -1,3 +1,4 @@
+import 'package:collab/app_screens/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class PersonalSpaces extends StatefulWidget{
@@ -12,9 +13,22 @@ class _PersonalSpacesState extends State<PersonalSpaces>{
   Widget build(BuildContext context){
     return Scaffold(
         appBar : AppBar(
-          title : const Text("PersonalSpaces"),
+          centerTitle: true,
+          title : const Text("PersonalSpaces", style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold)),
           backgroundColor: Colors.indigo,
           automaticallyImplyLeading: false,
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.account_circle_rounded),
+              highlightColor: Colors.lightBlueAccent,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => profilePage()),
+                );
+              },
+            ),
+          ],
         ),
         body : Container(
             decoration: const BoxDecoration(
@@ -25,7 +39,7 @@ class _PersonalSpacesState extends State<PersonalSpaces>{
               ),
             ),
             child : const Center(
-              child : Text("PersonalSpaces page."),
+              child : Text("In development...", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             )
         ),
 

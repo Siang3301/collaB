@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collab/search_appbar_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:collab/app_screens/profile_page.dart';
 import 'package:collab/profile_screens/user/user.dart' as u;
+import 'package:collab/widgets/provider_widgets.dart';
 
 class HomePage extends StatefulWidget{
   const HomePage({Key? key}) : super(key: key);
@@ -18,12 +20,22 @@ class _HomePage extends State<HomePage>{
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of(context)!.auth;
+    final db = Provider.of(context)!.db;
 
     return Scaffold(
-        appBar : AppBar(leading: const Icon(Icons.search),
+        appBar : AppBar( leading: Builder(
+              builder: (BuildContext context) {
+              return IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => LocalSearchAppBarPage()),);},
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
         backgroundColor: Colors.indigo,
         centerTitle: true,
-        title: const Text("collaB"),
+        title: const Text("collaB", style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold),),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.account_circle_rounded),
@@ -54,16 +66,20 @@ class _HomePage extends State<HomePage>{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-              FutureBuilder(
-                  future: _getProfileData(),
+              StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                  stream: db
+                      .collection('users_data')
+                      .doc(auth.getCurrentUID())
+                      .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       _userNameController.text = user.username;
                     }
+                    var userDocument = snapshot.data;
                     return Container(
                       margin: const EdgeInsets.only(
                           top: 10.0, bottom: 10.0, left: 20.0),
-                      child: Text('Welcome Back, \n' + user.username,
+                      child: Text('Welcome Back, \n' + '${userDocument?['username']}',
                           style: const TextStyle(
                               color: Colors.white70,
                               fontWeight: FontWeight.bold,

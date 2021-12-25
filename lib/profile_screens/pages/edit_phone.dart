@@ -51,7 +51,7 @@ class EditPhoneFormPageState extends State<EditPhoneFormPage> {
                     child: const Text(
                       "What's Your Phone Number?",
                       style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold, fontFamily: 'Raleway'),
                     )),
                 Padding(
                     padding: EdgeInsets.only(top: 40),
@@ -64,8 +64,8 @@ class EditPhoneFormPageState extends State<EditPhoneFormPage> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your phone number';
                             } else if (isAlpha(value)) {
-                              return 'Only Numbers Please';
-                            } else if (value.length < 10) {
+                              return 'Only Numbers Please, without dash';
+                            } else if (value.length != 10 && value.length != 11) {
                               return 'Please enter a VALID phone number';
                             }
                             return null;
@@ -86,10 +86,10 @@ class EditPhoneFormPageState extends State<EditPhoneFormPage> {
                             onPressed: () async{
                               user.phone = phoneController.text;
                               // Validate returns true if the form is valid, or false otherwise.
-                              updateUserValue(user.phone);
                               setState(() {});
                               if (_formKey.currentState!.validate() &&
                                   isNumeric(phoneController.text)) {
+                                updateUserValue(user.phone);
                                 final user1 = FirebaseAuth.instance.currentUser!;
                                 final uid = user1.uid;
                                 await FirebaseFirestore.instance

@@ -38,8 +38,8 @@ class _EditImagePageState extends State<EditImagePage> {
               child: const Text(
                 "Upload a photo of yourself:",
                 style: TextStyle(
-                  fontSize: 23,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold, fontFamily: 'Raleway'
                 ),
               )),
           FutureBuilder(

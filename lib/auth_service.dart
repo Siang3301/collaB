@@ -6,10 +6,72 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleAuthentication extends ChangeNotifier{
+//Email Login
+class AuthService {
+
+  // 1  --Variable--
+  static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   static final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  static Future<User?> signInWithGoogle({required BuildContext context}) async {
+  // 2
+  Stream<String?> get onAuthStateChanged =>
+      _firebaseAuth.authStateChanges().map((User? user) => user?.uid);
+
+  String getCurrentUID() {
+    return (_firebaseAuth.currentUser!).uid;
+  }
+
+  // GET CURRENT USER
+  Future getCurrentUser() async {
+    return _firebaseAuth.currentUser!;
+  }
+
+
+  // 3
+  Future<String?> signIn({required String email, required String password}) async {
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      return "Signed in";
+    } on FirebaseAuthException catch(e) {
+      return e.message;
+    }
+  }
+
+  // 4
+  Future<String?> signUp({required String email, required String password, required String name}) async {
+    try {
+      UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      _firebaseAuth.currentUser!.updateDisplayName(name);
+      User? user = result.user;
+
+      await DatabaseService(uid: user!.uid).updateUserData(name, '01x-xxxxxxx', 'Edit yourself now!', email, user.uid);
+
+      return "Signed up";
+    } on FirebaseAuthException catch(e) {
+      return e.message;
+    }
+  }
+
+  // 5
+  Future<String?> signOut() async {
+    try {
+      await _firebaseAuth.signOut();
+      return "Signed out";
+    } on FirebaseAuthException catch(e) {
+      return e.message;
+    }
+  }
+
+// 6
+  User? getUser() {
+    try {
+      return _firebaseAuth.currentUser;
+    } on FirebaseAuthException {
+      return null;
+    }
+  }
+
+  Future<User?> signInWithGoogle({required BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
 
@@ -40,21 +102,21 @@ class GoogleAuthentication extends ChangeNotifier{
         // ignore: unnecessary_null_comparison
         if (snapShot == null || !snapShot.exists) {
           // Document with id == varuId doesn't exist.
-          await DatabaseService(uid: user.uid).updateUserData(user.displayName!, '01x-xxxxxxx', 'Edit yourself now!');
+          await DatabaseService(uid: user.uid).updateUserData(user.displayName!, '01x-xxxxxxx', 'Edit yourself now!', user.email!, user.uid);
           // You can add data to Firebase Firestore here
         }
 
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           ScaffoldMessenger.of(context).showSnackBar(
-            GoogleAuthentication.customSnackBar(
+            AuthService.customSnackBar(
               content:
               'The account already exists with a different credential.',
             ),
           );
         } else if (e.code == 'invalid-credential') {
           ScaffoldMessenger.of(context).showSnackBar(
-            GoogleAuthentication.customSnackBar(
+            AuthService.customSnackBar(
               content:
               'Error occurred while accessing credentials. Try again.',
             ),
@@ -62,7 +124,7 @@ class GoogleAuthentication extends ChangeNotifier{
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          GoogleAuthentication.customSnackBar(
+          AuthService.customSnackBar(
             content: 'Error occurred using Google Sign-In. Try again.',
           ),
         );
@@ -103,9 +165,9 @@ class GoogleAuthentication extends ChangeNotifier{
   static Future<void> logout() async {
     await googleSignIn.disconnect();
     FirebaseAuth.instance.signOut();
+    _firebaseAuth.signOut();
   }
 
+
 }
-
-
 

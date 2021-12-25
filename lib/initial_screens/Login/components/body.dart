@@ -1,7 +1,5 @@
 // ignore_for_file: implementation_imports
 import 'package:collab/authenticate_page.dart';
-import 'package:collab/google_sign_up.dart';
-import 'package:collab/email_auth.dart';
 import 'package:collab/initial_screens/Signup/components/or_divider.dart';
 import 'package:collab/main.dart';
 import 'package:email_validator/email_validator.dart';
@@ -15,7 +13,7 @@ import 'package:collab/initial_components/rounded_password_field.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/src/provider.dart';
+import 'package:collab/widgets/provider_widgets.dart';
 
 class LoginBody extends StatefulWidget{
   const LoginBody({Key? key}) : super(key: key);
@@ -27,10 +25,11 @@ class LoginBody extends StatefulWidget{
 class _LoginBody extends State<LoginBody> {
   final _formKey = GlobalKey<FormState>();
   String _email = "", _password = "";
-  final auth = FirebaseAuth.instance;
+
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of(context)!.auth;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
     body: Form(
@@ -74,7 +73,7 @@ class _LoginBody extends State<LoginBody> {
                 if (_formKey.currentState!.validate() &&
                 EmailValidator.validate(
                 _email.trim())) {
-                  String? user = await context.read<EmailAuthentication>()
+                  String? user = await auth
                       .signIn(
                     email: _email.trim(),
                     password: _password.trim(),
@@ -114,7 +113,7 @@ class _LoginBody extends State<LoginBody> {
                     });
 
                     User? user =
-                    await GoogleAuthentication.signInWithGoogle(context: context);
+                    await auth.signInWithGoogle(context: context);
 
                     setState(() {
                     });

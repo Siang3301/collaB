@@ -14,11 +14,13 @@ class DatabaseService {
 
   final CollectionReference usersData = FirebaseFirestore.instance.collection('users_data');
 
-  Future updateUserData(String username, String phone, String bio) async {
+  Future updateUserData(String username, String phone, String bio, String email, String uid) async {
     return await usersData.doc(uid).set({
       'username' :username,
       'phone' :phone,
       'bio' :bio,
+      'email' :email,
+      'uid' :uid,
     });
     }
 
