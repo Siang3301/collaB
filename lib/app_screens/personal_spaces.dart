@@ -12,10 +12,11 @@ class _PersonalSpacesState extends State<PersonalSpaces>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      extendBodyBehindAppBar: true,
         appBar : AppBar(
           centerTitle: true,
           title : const Text("PersonalSpaces", style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold)),
-          backgroundColor: Colors.indigo,
+          backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           actions: <Widget>[
             IconButton(
@@ -31,18 +32,33 @@ class _PersonalSpacesState extends State<PersonalSpaces>{
           ],
         ),
         body : Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color.fromRGBO(1, 89, 99, 1.0), Colors.grey],
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-              ),
-            ),
-            child : const Center(
-              child : Text("In development...", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            )
+            decoration: BoxDecoration(
+            image: DecorationImage(
+            image: AssetImage('assets/images/personalspaces-ui.webp'),
+            fit: BoxFit.cover)),
+        child: Container(
+            width: double.maxFinite,
+            decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.bottomCenter, colors: [
+            Colors.black.withOpacity(0.8),
+            Colors.black.withOpacity(0.7)
+            ])),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                    alignment: Alignment.center,
+                    child: const Text('In development..... \nComing soon in 4th Sprint', textAlign: TextAlign.center, softWrap: false,
+                        overflow: TextOverflow.visible,
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 19.0,
+                        ))),
+              ],)
+          ),
         ),
-
     );
   }
 }

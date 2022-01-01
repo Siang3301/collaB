@@ -13,10 +13,11 @@ class _ProjectsState extends State<Projects>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar : AppBar(
           centerTitle: true,
-          title : const Text("Projects", style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold)),
-          backgroundColor: Colors.indigo,
+          title : const Text("WorkSpaces", style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold)),
+          backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           actions: <Widget>[
           IconButton(
@@ -31,7 +32,7 @@ class _ProjectsState extends State<Projects>{
           ),
         ],
       ),
-        body :  Projectview(),
+        body : Projectview(),
     );
   }
 }

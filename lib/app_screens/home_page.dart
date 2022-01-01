@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collab/search_appbar_page.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:collab/app_screens/profile_page.dart';
 import 'package:collab/profile_screens/user/user.dart' as u;
 import 'package:collab/widgets/provider_widgets.dart';
@@ -24,7 +23,8 @@ class _HomePage extends State<HomePage>{
     final db = Provider.of(context)!.db;
 
     return Scaffold(
-        appBar : AppBar( leading: Builder(
+        extendBodyBehindAppBar: true,
+        appBar : AppBar(leading: Builder(
               builder: (BuildContext context) {
               return IconButton(
               icon: const Icon(Icons.search),
@@ -33,7 +33,7 @@ class _HomePage extends State<HomePage>{
             );
           },
         ),
-        backgroundColor: Colors.indigo,
+        backgroundColor: Colors.transparent,
         centerTitle: true,
         title: const Text("collaB", style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold),),
           actions: <Widget>[
@@ -47,26 +47,26 @@ class _HomePage extends State<HomePage>{
                 );
               },
             ),
-          ],
-
-
-
-          ),
-
+          ],),
     body : Container(
-      padding: const EdgeInsets.only(right: 100),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color.fromRGBO(1, 89, 99, 1.0), Colors.grey],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
-        ),
-      ),
-
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-              StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/feed-ui.webp'),
+              fit: BoxFit.cover)),
+              child: Container(
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                  gradient: LinearGradient(begin: Alignment.bottomCenter, colors: [
+                  Colors.black.withOpacity(0.8),
+                  Colors.black.withOpacity(0.7)
+                  ])),
+              child: Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: <Widget>[
+               SizedBox(
+                   height: 8.0 * 10,
+                 ),
+               StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                   stream: db
                       .collection('users_data')
                       .doc(auth.getCurrentUID())
@@ -79,6 +79,7 @@ class _HomePage extends State<HomePage>{
                     return Container(
                       margin: const EdgeInsets.only(
                           top: 10.0, bottom: 10.0, left: 20.0),
+                      // ignore: prefer_adjacent_string_concatenation
                       child: Text('Welcome Back, \n' + '${userDocument?['username']}',
                           style: const TextStyle(
                               color: Colors.white70,
@@ -86,8 +87,7 @@ class _HomePage extends State<HomePage>{
                               fontSize: 30.0)),
                     );
                   }
-    ),
-
+             ),
               Container(
                   margin: const EdgeInsets.only(top: 170.0, bottom: 100.0, left:50.0),
                   child: const Text('No Feeds. \nCurrently you have no notifications', textAlign: TextAlign.center, softWrap: false,
@@ -97,25 +97,12 @@ class _HomePage extends State<HomePage>{
                         fontWeight: FontWeight.bold,
                         fontSize: 19.0,
                       ))),
-            ],
+            ],)
         ),
     ),
 
     );
   }
-
-    _getProfileData() async{
-    final user1 = FirebaseAuth.instance.currentUser!;
-    final uid = user1.uid;
-    await FirebaseFirestore.instance
-        .collection('users_data')
-        .doc(uid)
-        .get().then((result) {
-    user.username = result.data()!['username'];
-    user.phone = result.data()!['phone'];
-    user.bio = result.data()!['bio'];
-    });
-    }
 }
 
 

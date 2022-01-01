@@ -100,14 +100,21 @@ class _bottomNavigationBar extends State<bottomNavigationBar>{
 
   @override
   Widget build(BuildContext context) {
+
       return Scaffold(
           body: _children[_currentIndex],
-          bottomNavigationBar : BottomNavigationBar(
+          bottomNavigationBar : Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(begin: Alignment.bottomCenter, colors: [
+                  Colors.black.withOpacity(0.8),
+                  Colors.black.withOpacity(0.7)
+                ])),
+          child: BottomNavigationBar(
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.indigo,
-          selectedItemColor: Colors.white70,
-          unselectedItemColor: Colors.black,
+          backgroundColor: Colors.transparent,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white70,
           selectedFontSize: 16,
           unselectedFontSize: 13,
           selectedLabelStyle: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold),
@@ -121,15 +128,13 @@ class _bottomNavigationBar extends State<bottomNavigationBar>{
 
             BottomNavigationBarItem(
               icon: Icon(Icons.folder_open_rounded),
-              label: "Projects",),
+              label: "WorkSpaces",),
 
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline_rounded),
               label: "PersonalSpaces",),
           ],
-        )
-
-
+        ),),
     );
   }
 }
