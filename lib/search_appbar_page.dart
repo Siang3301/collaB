@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:collab/main.dart';
 
 class LocalSearchAppBarPage extends StatelessWidget {
+  const LocalSearchAppBarPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(MyApp.title),
+          backgroundColor: Colors.indigo,
+          title: Text('Search'),
           centerTitle: true,
           actions: [
             IconButton(
@@ -20,13 +22,12 @@ class LocalSearchAppBarPage extends StatelessWidget {
               },
             )
           ],
-          backgroundColor: Colors.lightBlueAccent,
         ),
         body: Container(
           color: Colors.white,
           child: Center(
             child: Text(
-              'Lmao',
+              ' ',
               style: TextStyle(
                 color: Colors.pink,
                 fontWeight: FontWeight.bold,
@@ -58,7 +59,7 @@ class TaskSearch extends SearchDelegate<String> {
           icon: Icon(Icons.clear),
           onPressed: () {
             if (query.isEmpty) {
-              close(context, null);
+              close(context, '');
             } else {
               query = '';
               showSuggestions(context);
@@ -70,7 +71,7 @@ class TaskSearch extends SearchDelegate<String> {
   @override
   Widget buildLeading(BuildContext context) => IconButton(
         icon: Icon(Icons.arrow_back),
-        onPressed: () => close(context, null),
+        onPressed: () => close(context, ''),
       );
 
   @override

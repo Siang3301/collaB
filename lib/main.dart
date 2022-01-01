@@ -1,13 +1,17 @@
-import 'package:collab/authenticate_page.dart';
-import 'package:collab/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collab/auth_service.dart';
+import 'package:collab/initial_screens/Login/login_screen.dart';
+import 'package:collab/initial_screens/Signup/signup_screen.dart';
+import 'package:collab/initial_screens/Welcome/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './app_screens/home_page.dart';
 import './app_screens/projects.dart';
 import './app_screens/personal_spaces.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'google_sign_in.dart';
-import 'package:provider/provider.dart';
+import 'auth_service.dart';
+
+import 'package:collab/widgets/provider_widgets.dart';
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,19 +20,51 @@ Future main() async{
   runApp(Collab());
 }
 
-class Collab extends StatelessWidget{
+class Collab extends StatelessWidget {
   const Collab({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-    create: (context) => GoogleSignInProvider(),
-    // TODO: implement build
-    child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home : AuthenticatePage(),
-    ),
-  );
+  Widget build(BuildContext context) {
+    return Provider(
+      auth: AuthService(),
+      db: FirebaseFirestore.instance,
+      // TODO: implement build
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: HomeController(),
+          routes: <String, WidgetBuilder>{
+            '/home': (BuildContext context) => bottomNavigationBar(),
+            '/main': (BuildContext context) => WelcomeScreen(),
+            '/signin': (BuildContext context) => LoginScreen(),
+            '/signup': (BuildContext context) => SignUpScreen(),
+          }
+      ),
+    );
+  }
 }
+
+class HomeController extends StatelessWidget {
+  const HomeController({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final AuthService auth = Provider.of(context)!.auth;
+    return StreamBuilder<String?>(
+      stream: auth.onAuthStateChanged,
+      builder: (context, AsyncSnapshot<String?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          final bool signedIn = snapshot.hasData;
+          return signedIn ? bottomNavigationBar() : WelcomeScreen();
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+}
+
+
+
+
 
 // ignore: camel_case_types
 class bottomNavigationBar extends StatefulWidget{
@@ -64,34 +100,41 @@ class _bottomNavigationBar extends State<bottomNavigationBar>{
 
   @override
   Widget build(BuildContext context) {
+
       return Scaffold(
           body: _children[_currentIndex],
-          bottomNavigationBar : BottomNavigationBar(
+          bottomNavigationBar : Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(begin: Alignment.bottomCenter, colors: [
+                  Colors.black.withOpacity(0.8),
+                  Colors.black.withOpacity(0.7)
+                ])),
+          child: BottomNavigationBar(
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.indigo,
-          selectedItemColor: Colors.white70,
-          unselectedItemColor: Colors.black,
+          backgroundColor: Colors.transparent,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white70,
           selectedFontSize: 16,
           unselectedFontSize: 13,
+          selectedLabelStyle: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold),
+          unselectedLabelStyle: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold),
           onTap: onTappedBar,
 
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.add_alert_outlined),
-              label: "Feeds",),
+              label: "Feeds"),
 
             BottomNavigationBarItem(
               icon: Icon(Icons.folder_open_rounded),
-              label: "Projects",),
+              label: "WorkSpaces",),
 
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline_rounded),
               label: "PersonalSpaces",),
           ],
-        )
-
-
+        ),),
     );
   }
 }
