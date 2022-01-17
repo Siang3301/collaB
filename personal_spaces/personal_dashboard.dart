@@ -1,5 +1,6 @@
 import 'package:collab/personal_spaces/calender_schedule.dart';
-import 'package:collab/personal_spaces/report_summary.dart';
+import 'package:collab/personal_spaces/archives/project_archive_list.dart';
+import 'package:collab/personal_spaces/project_report_list.dart';
 import 'package:collab/personal_spaces/user_checklist.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +13,20 @@ class personalDashboard extends StatelessWidget {
       img: "assets/images/todo.png");
 
   Items item2 = Items(
-    title: "Calender & Schedule",
+    title: "Calender &\n Schedule",
     subtitle: "Your Time Manager",
     img: "assets/images/calendar.png",
   );
   Items item3 = Items(
-    title: "Report Summary Statistics",
+    title: "Project Summary Statistics",
     subtitle: "Your Report Summary",
     img: "assets/images/report.png",
+  );
+
+  Items item4 = Items(
+    title: "Project & Task Archive",
+    subtitle: "Your Further Review",
+    img: "assets/images/archives.png",
   );
 
   personalDashboard({Key? key}) : super(key: key);
@@ -34,6 +41,7 @@ class personalDashboard extends StatelessWidget {
               image: AssetImage('assets/images/personalspaces-ui.webp'),
               fit: BoxFit.cover)),
       child: Container(
+        padding: EdgeInsets.only(top:80),
         alignment: Alignment.center,
           width: double.maxFinite,
           decoration: BoxDecoration(
@@ -123,7 +131,7 @@ class personalDashboard extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            reportSummary()));
+                            reportList()));
               },
              child:Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -160,6 +168,54 @@ class personalDashboard extends StatelessWidget {
               ],
             ),)
            ),
+                Container(
+                    width: double.maxFinite,
+                    margin: EdgeInsets.all(16),
+                    height: 150,
+                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    archiveList()));
+                      },
+                      child:Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            item4.img,
+                            width: 42,
+                          ),
+                          SizedBox(
+                            height: 14,
+                          ),
+                          Text(
+                            item4.title,
+                            style: GoogleFonts.openSans(
+                                textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600)),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            item4.subtitle,
+                            style: GoogleFonts.openSans(
+                                textStyle: TextStyle(
+                                    color: Colors.white38,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600)),
+                          ),
+                          SizedBox(
+                            height: 14,
+                          ),
+                        ],
+                      ),)
+                ),
 
            ]
          ),
