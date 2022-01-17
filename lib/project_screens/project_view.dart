@@ -121,7 +121,7 @@ class _Projectview extends State<Projectview> {
       ),),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add, color: Colors.white),
-          backgroundColor: Colors.lightBlue,
+          backgroundColor: Colors.white.withOpacity(0.3),
           onPressed: () {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AddProject()));

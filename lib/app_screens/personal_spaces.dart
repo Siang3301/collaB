@@ -1,5 +1,6 @@
 import 'package:collab/app_screens/profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:collab/personal_spaces/personal_dashboard.dart';
 
 class PersonalSpaces extends StatefulWidget{
   const PersonalSpaces({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class _PersonalSpacesState extends State<PersonalSpaces>{
       extendBodyBehindAppBar: true,
         appBar : AppBar(
           centerTitle: true,
-          title : const Text("PersonalSpaces", style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold)),
+          title : const Text("User Space", style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold)),
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           actions: <Widget>[
@@ -31,34 +32,7 @@ class _PersonalSpacesState extends State<PersonalSpaces>{
             ),
           ],
         ),
-        body : Container(
-            decoration: BoxDecoration(
-            image: DecorationImage(
-            image: AssetImage('assets/images/personalspaces-ui.webp'),
-            fit: BoxFit.cover)),
-        child: Container(
-            width: double.maxFinite,
-            decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.bottomCenter, colors: [
-            Colors.black.withOpacity(0.8),
-            Colors.black.withOpacity(0.7)
-            ])),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                    alignment: Alignment.center,
-                    child: const Text('In development..... \nComing soon in 4th Sprint', textAlign: TextAlign.center, softWrap: false,
-                        overflow: TextOverflow.visible,
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 19.0,
-                        ))),
-              ],)
-          ),
-        ),
+        body : personalDashboard(),
     );
   }
 }

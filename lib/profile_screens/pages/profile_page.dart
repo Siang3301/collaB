@@ -130,10 +130,11 @@ class _ProfileViewState extends State<ProfileView> {
                           color: kPrimaryLightColor,
                         ),
                         Container(
+                          width: 200,
                           margin: const EdgeInsets.only(left: 20.0),
                           child: Text(
                             // ignore: unnecessary_string_interpolations
-                            "${_userNameController.text}",
+                            "${_userNameController.text}", softWrap: true,
                             style: TextStyle(fontSize: 15, height: 1.4,fontFamily: 'Raleway',fontWeight: FontWeight.bold),
                           ),
                         ),

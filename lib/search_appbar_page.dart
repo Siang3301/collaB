@@ -1,159 +1,149 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collab/project_screens/task_details.dart';
 import 'package:flutter/material.dart';
+import 'package:collab/searchservice.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
-class LocalSearchAppBarPage extends StatelessWidget {
+class LocalSearchAppBarPage extends StatefulWidget {
   const LocalSearchAppBarPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.indigo,
-          title: Text('Search'),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () async {
-                showSearch(context: context, delegate: TaskSearch());
-
-                // final results = await
-
-
-                // print('Result: $results');
-              },
-            )
-          ],
-        ),
-        body: Container(
-          color: Colors.white,
-          child: Center(
-            child: Text(
-              ' ',
-              style: TextStyle(
-                color: Colors.pink,
-                fontWeight: FontWeight.bold,
-                fontSize: 64,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      );
+  _LocalSearchAppBarPage createState() => new _LocalSearchAppBarPage();
 }
 
-class TaskSearch extends SearchDelegate<String> {
-  final tasks = [
-    'Task1',
-    'Task2',
-    'Task3',
-    'Task4',
-    'Task5',
-  ];
-
-  final recentTasks = [
-    'Task1',
-  ];
+class _LocalSearchAppBarPage extends State<LocalSearchAppBarPage> {
+  final TextEditingController searchController = TextEditingController();
+  late QuerySnapshot snapshotData;
+  bool isExecuted = false;
 
   @override
-  List<Widget> buildActions(BuildContext context) => [
-        IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () {
-            if (query.isEmpty) {
-              close(context, '');
-            } else {
-              query = '';
-              showSuggestions(context);
-            }
-          },
-        )
-      ];
+  Widget build(BuildContext context) {
+    // TODO: implement build
 
-  @override
-  Widget buildLeading(BuildContext context) => IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () => close(context, ''),
-      );
-
-  @override
-  Widget buildResults(BuildContext context) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.assessment, size: 120),
-            const SizedBox(height: 48),
-            Text(
-              query,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 64,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      );
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final suggestions = query.isEmpty
-        ? recentTasks
-        : tasks.where((tasks) {
-            final tasksLower = tasks.toLowerCase();
-            final queryLower = query.toLowerCase();
-
-            return tasksLower.startsWith(queryLower);
-          }).toList();
-
-    return buildSuggestionsSuccess(suggestions);
-  }
-
-  Widget buildSuggestionsSuccess(List<String> suggestions) => ListView.builder(
-        itemCount: suggestions.length,
-        itemBuilder: (context, index) {
-          final suggestion = suggestions[index];
-          final queryText = suggestion.substring(0, query.length);
-          final remainingText = suggestion.substring(query.length);
-
-          return ListTile(
-            onTap: () {
-              query = suggestion;
-
-              // 1. Show Results
-              showResults(context);
-
-              // 2. Close Search & Return Result
-              // close(context, suggestion);
-
-              // 3. Navigate to Result Page
-              //  Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (BuildContext context) => ResultPage(suggestion),
-              //   ),
-              // );
+    Widget searchedData(){
+      return ListView.builder(
+        itemCount: snapshotData.docs.length,
+        itemBuilder: (BuildContext context, int index){
+          return GestureDetector(
+            onTap: (){
+              Get.to(taskDetails(title: (snapshotData.docs[index].data()as dynamic)['task_name'],
+                                  description: (snapshotData.docs[index].data()as dynamic)['task_desc'],
+                                  taskID: (snapshotData.docs[index].data()as dynamic)['taskID'],
+                                  projectID: (snapshotData.docs[index].data()as dynamic)['projectID'],));
             },
-            leading: Icon(Icons.assessment),
-            // title: Text(suggestion),
-            title: RichText(
-              text: TextSpan(
-                text: queryText,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-                children: [
-                  TextSpan(
-                    text: remainingText,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 18,
-                    ),
+            child: Container(
+            margin: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.lightBlue)),
+            child: ListTile(
+            leading: Container(
+                 padding: EdgeInsets.only(right: 12.0),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          right: BorderSide(width: 1.0, color: Colors.white24))),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.black26,
+                    child: Text((snapshotData.docs[index].data()as dynamic)['task_name'][0]),
                   ),
-                ],
-              ),
-            ),
+                ),
+            title: Text('Task name: ' + (snapshotData.docs[index].data() as dynamic)['task_name'],
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:[
+                SizedBox(height: 5),
+                Text('Assign to: ' +(snapshotData.docs[index].data() as dynamic)['assignee_name'],
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400)),
+                Text('Due on: ' + DateFormat.yMd().format(DateTime.parse((snapshotData.docs[index].data() as dynamic)['due_date'])) + ' ' +
+                  DateFormat.jm().format(DateTime.parse((snapshotData.docs[index].data() as dynamic)['due_date'])),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400)),
+                (snapshotData.docs[index].data() as dynamic)['complete'] == true ?
+                Text('Status: ' + 'Completed',
+                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400))
+                : Text('Status: ' + 'In progress',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400)) ,
+              ]),
+            trailing: InkWell(
+                child: Icon(Icons.edit, color: Colors.white, size: 40.0))
+             )
+            )
           );
-        },
+        }
       );
+    }
+
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      floatingActionButton:
+        FloatingActionButton(child: Icon(Icons.clear, color: Colors.white),
+            backgroundColor: Colors.white.withOpacity(0.3), onPressed: () {
+          isExecuted = false;
+          setState(() {
+            snapshotData.docs.clear();
+          });
+        }),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        actions: [
+          GetBuilder<DataController>(
+          init: DataController(),
+          builder: (val) {
+            return IconButton(icon: Icon(Icons.search),
+                onPressed: () {
+                  val.queryData(searchController.text).then((value) {
+                    snapshotData = value;
+                    if(snapshotData.docs.isEmpty){
+                      Fluttertoast.showToast(
+                        backgroundColor: Colors.grey,
+                        msg: "Task did not found",
+                        gravity: ToastGravity.CENTER,
+                        fontSize: 16.0,
+                      );
+                    }
+                    else {
+                      setState(() {
+                        isExecuted = true;
+                      });
+                    }
+                  });
+                });
+          },
+        ),
+      ],
+       title: TextField(
+          style: TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+          hintText: 'Click here to search any task',
+          hintStyle: TextStyle(color: Colors.white)),
+          controller: searchController,
+      )),
+
+      body: Container(
+        decoration: BoxDecoration(
+        image: DecorationImage(
+        image: AssetImage('assets/images/personalspaces-ui.webp'),
+        fit: BoxFit.cover)),
+      child: Container(
+        alignment: Alignment.center,
+        width: double.maxFinite,
+        decoration: BoxDecoration(
+        gradient: LinearGradient(begin: Alignment.bottomCenter, colors: [
+        Colors.black.withOpacity(0.8),
+        Colors.black.withOpacity(0.7)
+        ])),
+      child: isExecuted ? searchedData() : Container(
+        child: Center(
+          child:Row(mainAxisAlignment:MainAxisAlignment.center, children:const [
+            Text('Search your task', style:
+            TextStyle(color: Colors.white, fontSize: 25, fontFamily: 'Raleway')),
+            Icon(Icons.search_rounded, color: Colors.white, size:45)
+          ],)
+        ),
+      )))
+    );
+  }
 }

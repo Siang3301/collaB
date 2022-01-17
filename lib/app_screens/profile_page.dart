@@ -37,34 +37,9 @@ class _profilePage extends State<profilePage>{
           )
         ]
 
-
       ),
       body: ProfileView(),
     );
 
-  }
-}
-
-
-class Body extends StatelessWidget{
-  const Body({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Column(
-      children:[
-        SizedBox(
-        height: 200,
-        width: 200,
-        child: Stack(
-          children:const [CircleAvatar(
-              backgroundImage: AssetImage("assets/images/persona.jpg"),
-              ),
-          ],
-        ),
-      )
-      ]
-    );
   }
 }

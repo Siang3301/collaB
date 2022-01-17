@@ -16,7 +16,7 @@ class _ProjectsState extends State<Projects>{
       extendBodyBehindAppBar: true,
       appBar : AppBar(
           centerTitle: true,
-          title : const Text("WorkSpaces", style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold)),
+          title : const Text("Work Space", style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold)),
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           actions: <Widget>[

@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collab/auth_service.dart';
 import 'package:collab/initial_screens/Login/login_screen.dart';
@@ -5,6 +6,7 @@ import 'package:collab/initial_screens/Signup/signup_screen.dart';
 import 'package:collab/initial_screens/Welcome/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import './app_screens/home_page.dart';
 import './app_screens/projects.dart';
 import './app_screens/personal_spaces.dart';
@@ -21,7 +23,7 @@ Future main() async{
 }
 
 class Collab extends StatelessWidget {
-  const Collab({Key? key}) : super(key: key);
+  const Collab({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class Collab extends StatelessWidget {
       auth: AuthService(),
       db: FirebaseFirestore.instance,
       // TODO: implement build
-      child: MaterialApp(
+      child: GetMaterialApp(
           debugShowCheckedModeBanner: false,
           home: HomeController(),
           routes: <String, WidgetBuilder>{
@@ -44,14 +46,14 @@ class Collab extends StatelessWidget {
 }
 
 class HomeController extends StatelessWidget {
-  const HomeController({Key? key}) : super(key: key);
+  const HomeController({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final AuthService auth = Provider.of(context)!.auth;
-    return StreamBuilder<String?>(
+    final AuthService auth = Provider.of(context).auth;
+    return StreamBuilder<String>(
       stream: auth.onAuthStateChanged,
-      builder: (context, AsyncSnapshot<String?> snapshot) {
+      builder: (context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           final bool signedIn = snapshot.hasData;
           return signedIn ? bottomNavigationBar() : WelcomeScreen();
@@ -68,7 +70,7 @@ class HomeController extends StatelessWidget {
 
 // ignore: camel_case_types
 class bottomNavigationBar extends StatefulWidget{
-  const bottomNavigationBar({Key? key}) : super(key: key);
+  const bottomNavigationBar({Key key}) : super(key: key);
 
   @override
   _bottomNavigationBar createState() => _bottomNavigationBar();
@@ -76,13 +78,13 @@ class bottomNavigationBar extends StatefulWidget{
 
 // ignore: camel_case_types
 class _bottomNavigationBar extends State<bottomNavigationBar>{
-  final user = FirebaseAuth.instance.currentUser!;
+  final user = FirebaseAuth.instance.currentUser;
   int _currentIndex = 0;
 
   final tabs = [
     const Center(child:Text('Feeds')),
     const Center(child:Text('Projects')),
-    const Center(child:Text('Personal Spaces')),
+    const Center(child:Text('User Spaces')),
   ];
 
   final List<Widget> _children = [
@@ -128,11 +130,11 @@ class _bottomNavigationBar extends State<bottomNavigationBar>{
 
             BottomNavigationBarItem(
               icon: Icon(Icons.folder_open_rounded),
-              label: "WorkSpaces",),
+              label: "Work Space",),
 
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline_rounded),
-              label: "PersonalSpaces",),
+              label: "User Space",),
           ],
         ),),
     );

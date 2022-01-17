@@ -300,7 +300,7 @@ class _AddProject extends State<AddProject> {
                     child: SizedBox(
                       height: size.height / 14,
                       width: size.width / 1.15,
-                      child: TextField(
+                      child: TextFormField(
                         controller: _search,
                         decoration: InputDecoration(
                           hintText: "Enter your collaborator's email",
