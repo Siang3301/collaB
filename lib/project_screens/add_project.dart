@@ -36,6 +36,7 @@ class _AddProject extends State<AddProject> {
   addProject() async {
     final auth = Provider.of(context)!.auth;
     final db = Provider.of(context)!.db;
+    String creator = '';
 
     setState(() {
       isLoading = true;
@@ -43,12 +44,21 @@ class _AddProject extends State<AddProject> {
 
     String projectID = Uuid().v1();
 
+    //get creator name
+    await FirebaseFirestore.instance
+        .collection('users_data')
+        .doc(auth.getCurrentUID())
+        .get().then((result) {
+      creator = result.data()!['username'];
+    });
+
     //create new projectDB
     await db.collection('projects').doc(projectID).set({
       "members": membersList,
       "projectID": projectID,
       "project start": dateRange!.start.toString(),
-      "project end": dateRange!.end.toString(),
+      "project end": dateRange!.end.add(Duration(hours: 23, minutes : 59, seconds : 59)).toString(),
+      "project creator": creator
     });
 
     //create new project to every assignee based on uid
@@ -67,7 +77,8 @@ class _AddProject extends State<AddProject> {
         'time': time.toString(),
         'timestamp': time,
         "project start": dateRange!.start.toString(),
-        "project end": dateRange!.end.toString(),
+        "project end": dateRange!.end.add(Duration(hours: 23, minutes : 59, seconds : 59)).toString(),
+        "project creator": creator,
         'isAdmin' : false,
       });
     }
@@ -86,7 +97,8 @@ class _AddProject extends State<AddProject> {
       'time': time.toString(),
       'timestamp': time,
       "project start": dateRange!.start.toString(),
-      "project end": dateRange!.end.toString(),
+      "project end": dateRange!.end.add(Duration(hours: 23, minutes : 59, seconds : 59)).toString(),
+      "project creator": creator,
       'isAdmin' : true,
     });
   }

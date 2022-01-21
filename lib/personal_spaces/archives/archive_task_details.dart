@@ -13,6 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:collab/database.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:intl/intl.dart';
 
 // ignore: camel_case_types
 class archiveTaskDetails extends StatefulWidget {
@@ -32,6 +33,7 @@ class _archiveTaskDetails extends State<archiveTaskDetails> {
   List<File> file = []; String? percentage;
   late DatePickerWidget _date; late TimePickerWidget _time;
   String dueDate = ''; String dueTime = '';
+  DateTime? completedTime; String completedTime_ = '';
   DateTime? dt; TimeOfDay? t;
   List<String> fileName = [];
   Map<String, dynamic>? assignee;
@@ -76,8 +78,10 @@ class _archiveTaskDetails extends State<archiveTaskDetails> {
         assignee = value.data();
         dueDate = assignee!['due_date'];
         status = assignee!['complete'];
+        completedTime = DateTime.parse(value.data()!['completeTime'].toDate().toString());
       });
     });
+    completedTime_ = DateFormat.yMd().add_jm().format(completedTime!).toString();
     DateTime dates = DateTime.parse(dueDate);
     dt = dates.datetime(dates);
     t = dates.daytime(dates);
@@ -156,7 +160,7 @@ class _archiveTaskDetails extends State<archiveTaskDetails> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      appBar: buildAppBar(context, widget.projectID, widget.taskID, status),
+      appBar: buildAppBar(context, widget.projectID, widget.taskID, status, completedTime_),
       body: Form(
           key: _formKey,
           child: SingleChildScrollView(

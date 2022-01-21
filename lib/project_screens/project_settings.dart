@@ -22,7 +22,7 @@ class projectSettings extends StatefulWidget {
 // ignore: camel_case_types
 class _projectSettings extends State<projectSettings> {
   final _formKey = GlobalKey<FormState>(); // validation use
-  DateTimeRange? dateRange;
+  DateTimeRange? dateRange; DateTimeRange? updatedDateRange;
   bool isLoading = false;
   Map<String, dynamic>? userMap;
   List<Map<String, dynamic>> membersList = [];
@@ -94,9 +94,10 @@ class _projectSettings extends State<projectSettings> {
       setState(() {
         final initialDateRange = DateTimeRange(
           start: DateTime.parse(value['project start']),
-          end: DateTime.parse(value['project end']),
+          end: DateTime.parse(value['project end']).subtract(Duration(hours: 23, minutes : 59, seconds : 59)),
         );
         dateRange = initialDateRange;
+        updatedDateRange = dateRange;
       });
     });
   }
@@ -185,6 +186,9 @@ class _projectSettings extends State<projectSettings> {
        ),
       child: RaisedButton(
           onPressed: () async {
+            if(updatedDateRange != dateRange) {
+              dateRange = updatedDateRange;
+            }
             updateProject();
             Navigator.pop(context);
             Navigator.pop(context);
@@ -309,22 +313,22 @@ class _projectSettings extends State<projectSettings> {
 
     if (newDateRange == null) return;
 
-    setState(() => dateRange = newDateRange);
+    setState(() => updatedDateRange = newDateRange);
   }
 
   String getFrom() {
-    if (dateRange == null) {
+    if (updatedDateRange == null) {
         return 'Initial date';
     } else {
-      return DateFormat('MM/dd/yyyy').format(dateRange!.start);
+      return DateFormat('MM/dd/yyyy').format(updatedDateRange!.start);
     }
   }
 
   String getUntil() {
-    if (dateRange == null) {
+    if (updatedDateRange == null) {
         return 'End date';
     } else {
-      return DateFormat('MM/dd/yyyy').format(dateRange!.end);
+      return DateFormat('MM/dd/yyyy').format(updatedDateRange!.end);
     }
   }
 
@@ -444,7 +448,7 @@ class _projectSettings extends State<projectSettings> {
     await db.collection('projects').doc(widget.projectID).update({
       "members": membersList,
       "project start": dateRange!.start.toString(),
-      "project end": dateRange!.end.toString(),
+      "project end": dateRange!.end.add(Duration(hours: 23, minutes : 59, seconds : 59)).toString(),
     });
 
     //update current projectDB to current collaborator based on uid
@@ -464,7 +468,7 @@ class _projectSettings extends State<projectSettings> {
           'time': 'project updated on: ' + time.toString(),
           'timestamp': time,
           "project start": dateRange!.start.toString(),
-          "project end": dateRange!.end.toString(),
+          "project end": dateRange!.end.add(Duration(hours: 23, minutes : 59, seconds : 59)).toString(),
           'isAdmin': false,
         });
       }
@@ -480,7 +484,7 @@ class _projectSettings extends State<projectSettings> {
           'time': 'project updated on: ' + time.toString(),
           'timestamp': time,
           "project start": dateRange!.start.toString(),
-          "project end": dateRange!.end.toString(),
+          "project end": dateRange!.end.add(Duration(hours: 23, minutes : 59, seconds : 59)).toString(),
           'isAdmin': true,
         });
       }
@@ -510,7 +514,7 @@ class _projectSettings extends State<projectSettings> {
           'time': 'project updated on: ' + time.toString(),
           'timestamp': time,
           "project start": dateRange!.start.toString(),
-          "project end": dateRange!.end.toString(),
+          "project end": dateRange!.end.add(Duration(hours: 23, minutes : 59, seconds : 59)).toString(),
           'isAdmin': false,
         });
       }

@@ -13,6 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:collab/database.dart';
 import 'package:path/path.dart' as Path;
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // ignore: camel_case_types
@@ -38,7 +39,7 @@ class _taskDetails extends State<taskDetails> {
   Map<String, dynamic>? assignee;
   Map<String, dynamic>? userMap;
   List<Map<String, dynamic>> membersList = [];
-  var time = DateTime.now();
+  var time = DateTime.now(); DateTime? completedTime; String completedTime_ = '';
   final _formKey = GlobalKey<FormState>();
   List<bool> _isChecked = [];
   TextEditingController descriptionController = TextEditingController();
@@ -75,8 +76,10 @@ class _taskDetails extends State<taskDetails> {
           assignee = value.data();
           dueDate = assignee!['due_date'];
           status = assignee!['complete'];
+          completedTime = DateTime.parse(value.data()!['completeTime'].toDate().toString());
       });
     });
+    completedTime_ = DateFormat.yMd().add_jm().format(completedTime!).toString();
     DateTime dates = DateTime.parse(dueDate);
     dt = dates.datetime(dates);
     t = dates.daytime(dates);
@@ -142,7 +145,7 @@ class _taskDetails extends State<taskDetails> {
       'assignee_name' : userMap?['username'] ?? assignee?['assignee_name'],
       'assignee_email': userMap?['email'] ?? assignee?['assignee_email'],
       'time': 'updated on: '+ time.toString(),
-      'timestamp': time,
+      'completeTime': time,
       'due_date': dateTime.toString(),
       'complete': false,
     };
@@ -254,7 +257,7 @@ class _taskDetails extends State<taskDetails> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      appBar: buildAppBar(context, widget.projectID, widget.taskID, status),
+      appBar: buildAppBar(context, widget.projectID, widget.taskID, status, completedTime_),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(

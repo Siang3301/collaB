@@ -78,7 +78,8 @@ class _HomePage extends State<HomePage>{
                   Colors.black.withOpacity(0.7)
                   ])),
           ),
-          SingleChildScrollView(
+          SafeArea(
+          child:SingleChildScrollView(
           child:Stack(
                children: <Widget>[
                  StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -97,7 +98,7 @@ class _HomePage extends State<HomePage>{
                            // ignore: prefer_adjacent_string_concatenation
                            child: Container(
                                width: width,
-                               padding: const EdgeInsets.only(top:95, left: 15, right:15),
+                               padding: const EdgeInsets.all(15),
                                    child:Column(
                                      crossAxisAlignment: CrossAxisAlignment.start,
                                      children: [
@@ -130,7 +131,7 @@ class _HomePage extends State<HomePage>{
                    builder: (context, snapshot) {
                      if (snapshot.connectionState == ConnectionState.waiting) {
                        return  Container(
-                           height: height,
+                           height: MediaQuery.of(context).size.height * 0.8,
                            alignment: Alignment.center,
                            child: CircularProgressIndicator()
                        );
@@ -144,7 +145,7 @@ class _HomePage extends State<HomePage>{
                        }
                        if(user.isEmpty){
                          return Container(
-                             height: height,
+                             height: MediaQuery.of(context).size.height * 0.8,
                              alignment: Alignment.center,
                              child:Text("No Feeds. \nCurrently you have no notifications",
                                style: TextStyle( color: Colors.white, fontFamily: 'Raleway', fontSize: 20, fontWeight: FontWeight.bold),
@@ -154,14 +155,13 @@ class _HomePage extends State<HomePage>{
                        else {
                          return Container(
                            padding: EdgeInsets.only(top:125),
-                           height: height,
                            child: ListView.builder(
                            physics: const NeverScrollableScrollPhysics(),
                            scrollDirection: Axis.vertical,
                            shrinkWrap: true,
                            itemCount: user.length,
                            itemBuilder: (context, index) {
-                             var time = (user[index]['timestamp'] as Timestamp).toDate();
+                             var time = (user[index]['completeTime'] as Timestamp).toDate();
                              DateTime due = DateTime.parse(
                                  user[index]['due_date']);
 
@@ -228,7 +228,7 @@ class _HomePage extends State<HomePage>{
                      }
                    },
                  ),
-            ],))
+            ],)))
     ])
     );
   }

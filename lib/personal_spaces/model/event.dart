@@ -13,8 +13,9 @@ class EventModel{
   final String? projectID;
   final String? taskID;
   final bool? status;
+  final DateTime? completeTime;
 
-  EventModel({this.name, this.desc, this.due, this.assignee_name, this.assignee_email, this.status, this.projectID, this.taskID});
+  EventModel({this.name, this.desc, this.due, this.assignee_name, this.assignee_email, this.status, this.projectID, this.taskID, this.completeTime});
 
   EventModel copyWith({
     String? name,
@@ -25,6 +26,7 @@ class EventModel{
     bool? status,
     String? projectID,
     String? taskID,
+    DateTime? completeTime
   }) {
     return EventModel(
       name: name ?? this.name,
@@ -35,6 +37,7 @@ class EventModel{
       status: status ?? this.status,
       projectID: projectID ?? this.projectID,
       taskID: taskID ?? this.taskID,
+      completeTime: completeTime ?? this.completeTime
     );
   }
 
@@ -45,9 +48,10 @@ class EventModel{
       'due': due,
       'assignee_name': assignee_name,
       'assignee_email': assignee_email,
-      'status': status,
+      'complete': status,
       'projectID': projectID,
-      'taskID': taskID
+      'taskID': taskID,
+      'completeTime': completeTime
     };
   }
 
@@ -62,7 +66,8 @@ class EventModel{
       assignee_email: map['assignee_email'],
       status: map['complete'],
       projectID: map['projectID'],
-      taskID: map['taskID']
+      taskID: map['taskID'],
+      completeTime: DateTime.parse(map['completeTime'].toDate().toString())
     );
   }
   factory EventModel.fromDS(String id, Map<String, dynamic> data) {
@@ -75,7 +80,8 @@ class EventModel{
       assignee_email: data['assignee_email'],
       status: data['complete'],
       projectID: data['projectID'],
-      taskID: data['taskID']
+      taskID: data['taskID'],
+      completeTime: DateTime.parse(data['completeTime'].toDate().toString())
     );
   }
 
@@ -86,7 +92,7 @@ class EventModel{
   String toString() {
     return 'EventModel(title: $name, assignee_name: $assignee_name,'
         ' description: $desc, due: $due, assignee_email: $assignee_email,'
-        ' status: $status, projectID: $projectID, taskID: $taskID)';
+        ' status: $status, projectID: $projectID, taskID: $taskID, completeTime: $completeTime)';
   }
 
   @override
@@ -101,7 +107,8 @@ class EventModel{
         o.assignee_email == assignee_email &&
         o.status == status &&
         o.projectID == projectID &&
-        o.taskID == taskID;
+        o.taskID == taskID &&
+        o.completeTime == completeTime;
   }
 
   @override
@@ -113,6 +120,7 @@ class EventModel{
     assignee_email.hashCode ^
     status.hashCode ^
     projectID.hashCode ^
-    taskID.hashCode;
+    taskID.hashCode^
+    completeTime.hashCode;
   }
 }

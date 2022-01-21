@@ -5,7 +5,8 @@ import 'package:collab/widgets/provider_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-AppBar buildAppBar(BuildContext context, String projectID, String taskID, bool status) {
+
+AppBar buildAppBar(BuildContext context, String projectID, String taskID, bool status, String completedTime) {
   return AppBar(
     iconTheme: IconThemeData(
         color: Colors
@@ -21,7 +22,7 @@ AppBar buildAppBar(BuildContext context, String projectID, String taskID, bool s
            ),
            child: status==false?
            TextButton.icon(onPressed: (){showCompleteDialog(context, projectID, taskID); }, icon: Icon(Icons.done_rounded), label: Text('Complete'))
-           :RichText(text: TextSpan( children: const [TextSpan(text: "Completed",style: TextStyle(color: Colors.green, fontSize: 17)),
+           :RichText(text: TextSpan( children: [TextSpan(text: "Completed on: " + completedTime,style: TextStyle(color: Colors.green, fontSize: 13)),
              WidgetSpan(child: Icon(Icons.done_sharp, color: Colors.green,),)],),)
       ),
       Theme(data: Theme.of(context).copyWith(
@@ -184,7 +185,7 @@ void onClicked(BuildContext context, int item, projectID, taskID){
           'task_desc': docSnapshot['task_desc'],
           'task_name': docSnapshot['task_name'],
           'time':  'archived on: ' + time.toString(),
-          'timestamp':  time,
+          'completeTime':  time,
         })
             .then((value) => print("document moved to different collection"))
             .catchError((error) => print("Failed to move document: $error")).then((value) => ({
@@ -276,6 +277,7 @@ void onClicked(BuildContext context, int item, projectID, taskID){
 }
 
 showCompleteDialog(BuildContext context, projectID, taskID) {
+  DateTime time = DateTime.now();
   List<Map<String, dynamic>> membersList = [];
   final db = Provider.of(context)!.db;
   void getCurrentMembers() async {
@@ -311,7 +313,7 @@ showCompleteDialog(BuildContext context, projectID, taskID) {
             .doc(projectID)
             .collection('tasks')
             .doc(taskID)
-            .update(setCompleted(true));
+            .update(setCompleted(true, time));
 
         for(int i = 0; i<membersList.length ; i++) {
           final uid = membersList[i]['uid'];
@@ -319,7 +321,7 @@ showCompleteDialog(BuildContext context, projectID, taskID) {
               .doc(uid)
               .collection('event_data')
               .doc(taskID)
-              .update(setCompleted(true));
+              .update(setCompleted(true, time));
         }
         Navigator.pop(context);
       }catch(e){
@@ -352,7 +354,8 @@ showCompleteDialog(BuildContext context, projectID, taskID) {
   );
 }
 
-Map<String, dynamic> setCompleted(final status) => {
+Map<String, dynamic> setCompleted(final status, DateTime time) => {
   'complete': status,
+  'completeTime': time,
 };
 

@@ -198,26 +198,49 @@ class _calendarSchedule extends State<calendarSchedule> {
                         ),
                         ..._selectedEvents.map((event) =>
                         Container(
-                            margin: EdgeInsets.all(20),
+                            margin: EdgeInsets.only(top:20, left:15, right:15),
                             decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.3),
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(color: Colors.grey)),
                             child: ListTile(
-                              title: dateToday.isAfter(event.due) ?
-                                  Text('Task: ' + event.name + ' (OVERDUE)',
-                                  style: TextStyle(fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white))
-                                  : Text('Task: ' + event.name,
+                              title: event.completeTime.isBefore(event.due) && event.status == true ?
+                                  Text('Task: ' + event.name,
                                   style: TextStyle(fontSize: 15,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                              subtitle: Text('Due on: ' +
-                                  DateFormat.jm().format(event.due).toString(),
-                                  style: TextStyle(fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white)),
+                                  color: Colors.white,  fontFamily: 'Raleway')):
+                                  dateToday.isAfter(event.due) && event.status == false ?
+                                  Text('Task: ' + event.name + ' (OVERDUE)',
+                                      style: TextStyle(fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white, fontFamily: 'Raleway')) :
+                                  event.completeTime.isAfter(event.due) && event.status == true ?
+                                  Text('Task: ' + event.name + ' (OVERDUE)',
+                                      style: TextStyle(fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white, fontFamily: 'Raleway')) :
+                                  Text('Task: ' + event.name,
+                                      style: TextStyle(fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,  fontFamily: 'Raleway')),
+                              subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
+                                SizedBox(height: 3),
+                                Text('Due on: ' +
+                                    DateFormat.jm().format(event.due).toString(),
+                                    style: TextStyle(fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,  fontFamily: 'Raleway')),
+                                event.status == false ?
+                                Text('Status: Not complete yet',
+                                    style: TextStyle(fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,  fontFamily: 'Raleway')):
+                                Text('Status: Completed',
+                                    style: TextStyle(fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.greenAccent,  fontFamily: 'Raleway'))
+                               ]),
+
                               trailing: Icon(Icons.arrow_right_sharp, size: 50,
                                   color: Colors.white),
                               onTap: () {

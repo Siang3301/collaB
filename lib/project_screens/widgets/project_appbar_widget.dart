@@ -7,12 +7,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 AppBar buildAppBar(BuildContext context, String title, String description, String projectID, List membersList) {
   return AppBar(
+    centerTitle: true,
     iconTheme: IconThemeData(
         color: Colors
-            .black), // set backbutton color here which will reflect in all screens.
+            .white), // set backbutton color here which will reflect in all screens.
     leading: BackButton(),
-    backgroundColor: Colors.indigo,
-    title: Text(title, style:TextStyle(fontFamily: 'Raleway')),
+    backgroundColor: Colors.transparent,
+    title: Text(title, style:TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold)),
     elevation: 0,
       actions: [
         Theme(data: Theme.of(context).copyWith(
@@ -179,6 +180,7 @@ void onClicked(BuildContext context, int item, projectID, membersList, title, de
              "projectID": projectID,
              "project start": docSnapshot['project start'],
              "project end": docSnapshot['project end'],
+             "project creator": docSnapshot['project creator'],
              "isAdmin": docSnapshot['isAdmin'],
              "time": docSnapshot['time'],
              "timestamp": docSnapshot['timestamp'],
@@ -228,7 +230,7 @@ void onClicked(BuildContext context, int item, projectID, membersList, title, de
            if(snapshots.docs.isNotEmpty){
              Fluttertoast.showToast(
                backgroundColor: Colors.grey,
-               msg: "You need to complete or archive all tasks before you can delete!",
+               msg: "You need to complete or archive all tasks before you can archive!",
                gravity: ToastGravity.CENTER,
                fontSize: 16.0,
              );

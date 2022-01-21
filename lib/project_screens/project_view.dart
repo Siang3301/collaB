@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -60,7 +61,6 @@ class _Projectview extends State<Projectview> {
                     DateTime start = DateTime.parse(
                         docs[index]['project start']);
                     DateTime end = DateTime.parse(docs[index]['project end']);
-
                     return InkWell(
                       onTap: () {
                         Navigator.push(
@@ -97,16 +97,15 @@ class _Projectview extends State<Projectview> {
                                   SizedBox(
                                     height: 5,
                                   ),
-                                  Text('Kick-off: ' +
-                                      DateFormat.yMd().add_jm().format(start),
+                                  Text('Start: ' +
+                                      DateFormat.yMd().format(start) + ' ,' + ' End: ' + DateFormat.yMd().format(end),
                                       style:
                                       GoogleFonts.roboto(
                                           fontSize: 15, color: Colors.white)),
-                                  Text('End: ' +
-                                      DateFormat.yMd().add_jm().format(end),
+                                  Text('Created by: ' + docs[index]['project creator'],
                                       style:
                                       GoogleFonts.roboto(
-                                          fontSize: 15, color: Colors.white))
+                                      fontSize: 15, color: Colors.white)),
                                 ]),
                           ],
                         ),

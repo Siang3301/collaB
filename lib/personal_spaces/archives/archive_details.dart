@@ -96,6 +96,8 @@ class _archiveDetails extends State<archiveDetails> {
             Container(
               padding: EdgeInsets.all(15),
               height: 60,
+              decoration: BoxDecoration(
+                  border:Border(bottom: BorderSide (color: Colors.blueGrey))),
               width: width,
               child:Row( children:[
                 StreamBuilder<QuerySnapshot>(
@@ -140,10 +142,7 @@ class _archiveDetails extends State<archiveDetails> {
               ]
               ),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: StreamBuilder<QuerySnapshot>(
+           StreamBuilder<QuerySnapshot>(
                 stream: db
                     .collection('projects_logDB')
                     .doc(auth.getCurrentUID())
@@ -153,54 +152,71 @@ class _archiveDetails extends State<archiveDetails> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
+                    return Container(
+                        height: MediaQuery.of(context).size.height *0.7,
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator()
                     );
                   } else {
                     var docs = snapshot.data!.docs;
+                    if(docs.isEmpty){
+                      return Container(
+                          height: MediaQuery.of(context).size.height *0.7,
+                          alignment: Alignment.center,
+                          child:Text("No tasks in this project now.",
+                            style: TextStyle( color: Colors.white, fontFamily: 'Raleway', fontSize: 20, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,)
+                      );
+                    }
+                    else {
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        itemCount: docs.length + 1,
+                        separatorBuilder: (context, index) =>
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                        color: Colors.white,
+                                        width: 0.5,
+                                      ))),),
+                        itemBuilder: (context, index) {
+                          if (index == docs.length) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          color: Colors.white,
+                                          width: 0.0
+                                      ))),);
+                          }
+                          DateTime due = DateTime.parse(
+                              docs[index]['due_date']);
+                          DateTime completedTime = DateTime.parse(
+                              docs[index]['completeTime'].toDate().toString());
 
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: docs.length + 1,
-                      separatorBuilder: (context, index) => Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.white,
-                                  width: 0.5,
-                                ))),),
-                      itemBuilder: (context, index) {
-                        if (index == docs.length){
-                          return Container(
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                      color: Colors.white,
-                                      width: 0.0
-                                    ))),);
-                        }
-                        DateTime due = DateTime.parse(docs[index]['due_date']);
-
-                        return DismissibleWidget(
-                          item: docs,
-                          child: buildListTile(docs, index, due),
-                          onDismissed: (direction) =>
-                              dismissItem(context, index, direction, docs[index].id),
-                        );
-                      },
-                    );
+                          return DismissibleWidget(
+                            item: docs,
+                            child: buildListTile(
+                                docs, index, due, completedTime),
+                            onDismissed: (direction) =>
+                                dismissItem(
+                                    context, index, direction, docs[index].id),
+                          );
+                        },
+                      );
+                    }
                   }
                 },
               ),
-              // color: Colors.red,
-            ),
           ],
         ),
       ),)])
     );
   }
 
-  Widget buildListTile(final docs, int index, DateTime due) => InkWell(
+  Widget buildListTile(final docs, int index, DateTime due, DateTime completedTime) => InkWell(
     onTap: () {
       Navigator.push(
           context,
@@ -243,20 +259,20 @@ class _archiveDetails extends State<archiveDetails> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  docs[index]['complete'] == false ? Text(
+                  docs[index]['complete'] == false ? Text('Task: ' +
                     docs[index]['task_name'],
                     style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
                   ):
-                  Text(
+                  Text('Task: ' +
                     docs[index]['task_name'],
                     style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, decoration: TextDecoration.lineThrough, color: Colors.white),
                   ),
 
-                  docs[index]['complete'] == false ? Text(
+                  docs[index]['complete'] == false ? Text('Details: ' +
                     docs[index]['task_desc'],
                     maxLines: 2, style: GoogleFonts.roboto(fontSize: 15, color: Colors.white),
                   ):
-                  Text(
+                  Text('Details: ' +
                     docs[index]['task_desc'],
                     maxLines: 2, style: GoogleFonts.roboto(fontSize: 15,decoration: TextDecoration.lineThrough, color: Colors.white),
                   ),
@@ -268,7 +284,7 @@ class _archiveDetails extends State<archiveDetails> {
                     ),
                   ),
                   Text(
-                    docs[index]['complete']==true?"Completed" : "Due on : " + DateFormat.yMd().add_jm().format(due),
+                    docs[index]['complete']==true?"Completed on: " + DateFormat.yMd().add_jm().format(completedTime) : "Due on : " + DateFormat.yMd().add_jm().format(due),
                     style: GoogleFonts.roboto(
                         fontSize: 15,
                         color: docs[index]['complete'] == true?Colors.green : Colors.red,
@@ -321,6 +337,12 @@ class _archiveDetails extends State<archiveDetails> {
       child: Text("Yes"),
       onPressed:  () async{
         try{
+          Future.delayed(Duration.zero, () {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Task successfully deleted!'),));
+          });
           //delete task from eventDB on every user that terlibat in project
           for(int i = 0; i<membersList.length ; i++) {
             final uid = membersList[i]['uid'];
@@ -336,14 +358,6 @@ class _archiveDetails extends State<archiveDetails> {
         }catch(e){
           print(e);
         }
-        setState(() {
-          Future.delayed(Duration.zero, () {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Task successfully deleted!'),));
-          });
-        });
       },
     );
     // set up the AlertDialog

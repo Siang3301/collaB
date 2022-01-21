@@ -72,115 +72,157 @@ class _projectDetails extends State<projectDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of(context)!.auth;
     final db = Provider.of(context)!.db;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white70.withOpacity(0.93),
       appBar: buildAppBar(context, title, description, widget.projectID, membersList),
-      body: SingleChildScrollView(
-        child : Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.all(15),
-            height: 60,
-            width: width,
-            color: kPrimaryColor,
-            child:Row( children:[
-              StreamBuilder<QuerySnapshot>(
+      body: Stack(
+        children:<Widget>[
+           Container(
+              decoration: BoxDecoration(
+              image: DecorationImage(
+              image: AssetImage('assets/images/workspaces-ui.webp'),
+              fit: BoxFit.cover))),
+           Container(
+              width: double.maxFinite,
+              decoration: BoxDecoration(
+              gradient: LinearGradient(begin: Alignment.bottomCenter, colors: [
+              Colors.black.withOpacity(0.8),
+              Colors.black.withOpacity(0.7)
+              ]))),
+        SingleChildScrollView(
+          child : SafeArea(
+            child:Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            Container(
+              padding: EdgeInsets.all(15),
+              height: 60,
+              width: width,
+              decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.3),
+                  border:Border(bottom: BorderSide (color: Colors.lightBlue))),
+              child:Row( children:[
+                StreamBuilder<QuerySnapshot>(
+                  stream: db
+                      .collection('projects')
+                      .doc(widget.projectID)
+                      .collection('tasks')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                   return Center(
+                    child: CircularProgressIndicator(),
+                    );
+                    } else {
+                    var docs = snapshot.data!.docs;
+                    int totalTask = docs.length;
+                    int toDo = 0; int done = 0;
+                    for(int i = 0; i<docs.length; i ++){
+                      if(docs[i]['complete'] == true){
+                        done++;
+                      }
+                      else{
+                        toDo++;
+                      }
+                    }
+                    return Flexible(
+                      child:Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:[
+                       Align(
+                       child:RichText(text:TextSpan(children:[
+                        totalTask == 0 ?
+                        TextSpan(text: 'Add some task now!', style: TextStyle(color: Colors.white, fontFamily: 'Raleway', fontWeight: FontWeight.bold, fontSize: 18))
+                            :
+                        TextSpan(text: 'Total Tasks: ' + totalTask.toString(), style: TextStyle(color: Colors.white, fontFamily: 'Raleway', fontWeight: FontWeight.bold, fontSize: 18)),
+                      ])),),
+                      Align(
+                      child:RichText(text: TextSpan( children: [
+                      TextSpan(text: 'To Do: ' + toDo.toString() + '\t\t',style: TextStyle(color: Colors.white, fontFamily: 'Raleway', fontWeight: FontWeight.bold, fontSize: 18)),
+                      TextSpan(text: 'Done: ' + done.toString(),style: TextStyle(color: Colors.white,  fontFamily: 'Raleway', fontWeight: FontWeight.bold, fontSize: 18)),],),)
+                    )]));
+                  }}),
+              ]
+              ),
+            ),
+            StreamBuilder<QuerySnapshot>(
                 stream: db
                     .collection('projects')
                     .doc(widget.projectID)
                     .collection('tasks')
                     .snapshots(),
                 builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                 return Center(
-                  child: CircularProgressIndicator(),
-                  );
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Container(
+                        height: MediaQuery.of(context).size.height *0.7,
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator()
+                    );
                   } else {
-                  var docs = snapshot.data!.docs;
-                  int totalTask = docs.length;
-                  int toDo = 0; int done = 0;
-                  for(int i = 0; i<docs.length; i ++){
-                    if(docs[i]['complete'] == true){
-                      done++;
+                    var docs = snapshot.data!.docs;
+                    if(docs.isEmpty){
+                      return Container(
+                                height: MediaQuery.of(context).size.height *0.7,
+                                alignment: Alignment.center,
+                                child:Text("No tasks. \nClick + button to add your tasks now!",
+                                  style: TextStyle( color: Colors.white, fontFamily: 'Raleway', fontSize: 20, fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,)
+                            );
                     }
-                    else{
-                      toDo++;
+                    else {
+                      return ListView.separated(
+                        itemCount: docs.length + 1,
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        separatorBuilder: (context, index) =>
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                        color: Colors.white,
+                                        width: 0.5,
+                                      ))),),
+                        itemBuilder: (context, index) {
+                          if (index == docs.length) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          color: Colors.white,
+                                          width: 0.0
+                                      ))),);
+                          }
+                          DateTime due = DateTime.parse(
+                              docs[index]['due_date']);
+                          DateTime completedTime = DateTime.parse(
+                              docs[index]['completeTime'].toDate().toString());
+                          return DismissibleWidget(
+                            item: docs,
+                            child: buildListTile(
+                                docs, index, due, completedTime),
+                            onDismissed: (direction) =>
+                                dismissItem(
+                                    context, index, direction, docs[index].id),
+                          );
+                        },
+                      );
                     }
                   }
-                  return Flexible(
-                    child:Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:[
-                     Align(
-                     child:RichText(text:TextSpan(children:[
-                      totalTask == 0 ?
-                      TextSpan(text: 'Add some task now!', style: TextStyle(color: Colors.black, fontFamily: 'Raleway', fontWeight: FontWeight.bold, fontSize: 18))
-                          :
-                      TextSpan(text: 'Total Tasks: ' + totalTask.toString(), style: TextStyle(color: Colors.black, fontFamily: 'Raleway', fontWeight: FontWeight.bold, fontSize: 18)),
-                    ])),),
-                    Align(
-                    child:RichText(text: TextSpan( children: [
-                    TextSpan(text: 'To Do: ' + toDo.toString() + '\t\t',style: TextStyle(color: Colors.black, fontFamily: 'Raleway', fontWeight: FontWeight.bold, fontSize: 18)),
-                    TextSpan(text: 'Done: ' + done.toString(),style: TextStyle(color: Colors.black,  fontFamily: 'Raleway', fontWeight: FontWeight.bold, fontSize: 18)),],),)
-                  )]));
-                }}),
-            ]
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: StreamBuilder<QuerySnapshot>(
-              stream: db
-                  .collection('projects')
-                  .doc(widget.projectID)
-                  .collection('tasks')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  var docs = snapshot.data!.docs;
-
-                  return ListView.separated(
-                    itemCount: docs.length,
-                    separatorBuilder: (context, index) => Container(
-                                                    decoration: BoxDecoration(
-                                                    border: Border(
-                                                    bottom: BorderSide(
-                                                    color: Colors.grey,
-                                                    width: 0.5,
-                                                  ))),),
-                    itemBuilder: (context, index) {
-                    DateTime due = DateTime.parse(docs[index]['due_date']);
-
-                      return DismissibleWidget(
-                        item: docs,
-                        child: buildListTile(docs, index, due),
-                        onDismissed: (direction) =>
-                            dismissItem(context, index, direction, docs[index].id),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-            // color: Colors.red,
-          ),
+                },
+              )
         ],
       ),
       ),
+      )
+    ]),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add, color: Colors.white),
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Colors.white.withOpacity(0.3),
           onPressed: () {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AddTasks(projectID:widget.projectID)));
@@ -188,7 +230,7 @@ class _projectDetails extends State<projectDetails> {
     );
   }
 
-  Widget buildListTile(final docs, int index, DateTime due) => InkWell(
+  Widget buildListTile(final docs, int index, DateTime due, DateTime completedTime) => InkWell(
     onTap: () {
       Navigator.push(
           context,
@@ -203,12 +245,6 @@ class _projectDetails extends State<projectDetails> {
     child: Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-        border: Border(
-        bottom: BorderSide(
-            color: Colors.grey,
-            width: 0.5,
-        ))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -226,7 +262,8 @@ class _projectDetails extends State<projectDetails> {
             width: 60,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kPrimaryLightColor
+                color: Colors.white.withOpacity(0.5),
+                border: Border.all(color: Colors.lightBlue)
             ),
           ),
           SizedBox(width: 15),
@@ -237,32 +274,32 @@ class _projectDetails extends State<projectDetails> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  docs[index]['complete'] == false ? Text(
+                  docs[index]['complete'] == false ? Text('Task: ' +
                     docs[index]['task_name'],
-                    style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500),
+                    style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
                   ):
-                  Text(
+                  Text('Task: ' +
                     docs[index]['task_name'],
-                    style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, decoration: TextDecoration.lineThrough),
+                    style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500, decoration: TextDecoration.lineThrough, color: Colors.white),
                   ),
 
-                  docs[index]['complete'] == false ? Text(
+                  docs[index]['complete'] == false ? Text('Details: ' +
                     docs[index]['task_desc'],
-                    maxLines: 2, style: GoogleFonts.roboto(fontSize: 15),
+                    maxLines: 2, style: GoogleFonts.roboto(fontSize: 15, color: Colors.white),
                   ):
-                  Text(
+                  Text('Details: ' +
                     docs[index]['task_desc'],
-                    maxLines: 2, style: GoogleFonts.roboto(fontSize: 15,decoration: TextDecoration.lineThrough),
+                    maxLines: 2, style: GoogleFonts.roboto(fontSize: 15,decoration: TextDecoration.lineThrough, color: Colors.white),
                   ),
                   SizedBox(height: 10),
                   Text(
                     'Assigned to: ' + docs[index]['assignee_name'],
                     style: GoogleFonts.roboto(
-                      fontSize: 15,
+                      fontSize: 15, color: Colors.white
                     ),
                   ),
                   Text(
-                    docs[index]['complete']==true?"Completed" : "Due on : " + DateFormat.yMd().add_jm().format(due),
+                    docs[index]['complete']==true?"Completed on: " + DateFormat.yMd().add_jm().format(completedTime) : "Due on : " + DateFormat.yMd().add_jm().format(due),
                     style: GoogleFonts.roboto(
                         fontSize: 15,
                         color: docs[index]['complete'] == true?Colors.green : Colors.red,
@@ -359,6 +396,13 @@ class _projectDetails extends State<projectDetails> {
       child: Text("Yes"),
       onPressed:  () async{
         try{
+          Future.delayed(Duration.zero, () {
+            Navigator.of(context,rootNavigator: true).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Task successfully deleted!'),));
+          });
+
           await db
               .collection('projects')
               .doc(projectID)
@@ -378,14 +422,8 @@ class _projectDetails extends State<projectDetails> {
         }catch(e){
           print(e);
         }
-        setState(() {
-          Future.delayed(Duration.zero, () {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Task successfully deleted!'),));
-          });
-        });
+
+
       },
     );
     // set up the AlertDialog
@@ -399,7 +437,7 @@ class _projectDetails extends State<projectDetails> {
     );
     // show the dialog
     showDialog(
-      context: this.context,
+      context: context,
       builder: (BuildContext context) {
         return alert;
       },
@@ -428,7 +466,7 @@ class _projectDetails extends State<projectDetails> {
             'task_desc': docSnapshot['task_desc'],
             'task_name': docSnapshot['task_name'],
             'time':  'archived on: ' + time.toString(),
-            'timestamp':  time,
+            'completeTime':  time,
           })
               .then((value) => print("document moved to different collection"))
               .catchError((error) => print("Failed to move document: $error")).then((value) => ({
