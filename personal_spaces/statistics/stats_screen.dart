@@ -1,14 +1,17 @@
+import 'package:collab/personal_spaces/statistics/stats_bar_chart.dart';
+import 'package:collab/personal_spaces/statistics/stats_grid.dart';
 import 'package:flutter/material.dart';
-import 'package:collab/personal_spaces/statistics/data.dart';
-import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:collab/personal_spaces/statistics/display_widgets.dart';
 
 class StatsScreen extends StatefulWidget {
+  final String projectID;
+  const StatsScreen({Key? key, required this.projectID}) : super(key: key);
+
   @override
   _StatsScreenState createState() => _StatsScreenState();
 }
 
 class _StatsScreenState extends State<StatsScreen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,16 +42,17 @@ class _StatsScreenState extends State<StatsScreen> {
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             sliver: SliverToBoxAdapter(
-              child: StatsGrid(),
+              child: StatsGrid(projectID: widget.projectID),
             ),
           ),
           _buildHeader(),
           SliverPadding(
-            padding: const EdgeInsets.only(top: 20.0),
+            padding: const EdgeInsets.only(top: 5.0),
             sliver: SliverToBoxAdapter(
-              child: taskBarChart(covidCases: covidUSADailyNewCases),
+              child: statChart(projectID: widget.projectID)
             ),
           ),
+
         ],
       ),))
     );

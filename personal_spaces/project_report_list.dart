@@ -76,7 +76,7 @@ class _reportList extends State<reportList> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      StatsScreen()));
+                                      StatsScreen(projectID : docs[index].id)));
                         },
                         child: Container(
                           margin: EdgeInsets.only(bottom: 10),
@@ -89,7 +89,7 @@ class _reportList extends State<reportList> {
                             children: [
                               Container(
                                 margin: EdgeInsets.only(left: 20, right: 30),
-                                child: Icon(Icons.groups_rounded, size: 30,
+                                child: Icon(Icons.assignment, size: 30,
                                     color: Colors.white),
                               ),
                               Column(
@@ -104,16 +104,15 @@ class _reportList extends State<reportList> {
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Text('Kick-off: ' +
-                                        DateFormat.yMd().add_jm().format(start),
+                                    Text('Start: ' +
+                                        DateFormat.yMd().format(start) + ' ,' + ' End: ' + DateFormat.yMd().format(end),
                                         style:
                                         GoogleFonts.roboto(
                                             fontSize: 15, color: Colors.white)),
-                                    Text('End: ' +
-                                        DateFormat.yMd().add_jm().format(end),
+                                    Text('Created by: ' + docs[index]['project creator'],
                                         style:
                                         GoogleFonts.roboto(
-                                            fontSize: 15, color: Colors.white))
+                                            fontSize: 15, color: Colors.white)),
                                   ]),
                             ],
                           ),

@@ -105,13 +105,12 @@ class _archiveList extends State<archiveList> {
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Text('Kick-off: ' +
-                                        DateFormat.yMd().add_jm().format(start),
+                                    Text('Start: ' +
+                                        DateFormat.yMd().format(start) + ' ,' + ' End: ' + DateFormat.yMd().format(end),
                                         style:
                                         GoogleFonts.roboto(
                                             fontSize: 15, color: Colors.white)),
-                                    Text('End: ' +
-                                        DateFormat.yMd().add_jm().format(end),
+                                    Text('Created by: ' + docs[index]['project creator'],
                                         style:
                                         GoogleFonts.roboto(
                                             fontSize: 15, color: Colors.white)),

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class personalDashboard extends StatelessWidget {
+
   Items item1 = Items(
       title: "User Checklist",
       subtitle: "Your Personal Spaces",
