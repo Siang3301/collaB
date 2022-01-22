@@ -3,7 +3,9 @@ import 'package:collab/database.dart';
 import 'package:collab/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 //Email Login
@@ -28,28 +30,52 @@ class AuthService {
 
 
   // 3
-  Future<String?> signIn({required String email, required String password}) async {
+  Future<User?> signIn({required String email, required String password}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-      return "Signed in";
     } on FirebaseAuthException catch(e) {
-      return e.message;
+      print(e.message);
     }
   }
 
   // 4
   Future<String?> signUp({required String email, required String password, required String name}) async {
     try {
-      UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-      _firebaseAuth.currentUser!.updateDisplayName(name);
-      User? user = result.user;
-
-      await DatabaseService(uid: user!.uid).updateUserData(name, '01x-xxxxxxx', 'Edit yourself now!', email, user.uid);
-
-      return "Signed up";
+      bool isRegister = await isEmailRegistered(email);
+      if(isRegister == true) {
+        UserCredential result = await _firebaseAuth
+            .createUserWithEmailAndPassword(email: email, password: password);
+        _firebaseAuth.currentUser!.updateDisplayName(name);
+        User? user = result.user;
+        await DatabaseService(uid: user!.uid).updateUserData(
+            name, '01x-xxxxxxx', 'Edit yourself now!', email, user.uid);
+        return "Signed up";
+      }
+      else{
+        Fluttertoast.showToast(
+          backgroundColor: Colors.grey,
+          msg: "The email is registered, please use another email.",
+          gravity: ToastGravity.CENTER,
+          fontSize: 16.0,
+        );
+      }
     } on FirebaseAuthException catch(e) {
       return e.message;
     }
+  }
+
+  Future<bool> isEmailRegistered(String email) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('users_data')
+        .where('email', isEqualTo: email)
+        .limit(1)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    if (documents.length > 0) {
+      return false;
+    } else
+      print('Email validated and can be used');
+      return true;
   }
 
   // 5
@@ -163,11 +189,14 @@ class AuthService {
   }
 
   static Future<void> logout() async {
-    await googleSignIn.disconnect();
-    FirebaseAuth.instance.signOut();
-    _firebaseAuth.signOut();
+      if(googleSignIn.currentUser != null) {
+        _firebaseAuth.signOut();
+        await googleSignIn.disconnect();
+      }
+      else {
+        _firebaseAuth.signOut();
+      }
   }
-
 
 }
 

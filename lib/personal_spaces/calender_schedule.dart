@@ -215,7 +215,7 @@ class _calendarSchedule extends State<calendarSchedule> {
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white, fontFamily: 'Raleway')) :
                                   event.completeTime.isAfter(event.due) && event.status == true ?
-                                  Text('Task: ' + event.name + ' (OVERDUE)',
+                                  Text('Task: ' + event.name + ' (Late Completion)',
                                       style: TextStyle(fontSize: 15,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white, fontFamily: 'Raleway')) :

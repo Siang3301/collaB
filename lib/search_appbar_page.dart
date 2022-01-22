@@ -34,7 +34,7 @@ class _LocalSearchAppBarPage extends State<LocalSearchAppBarPage> {
                                   projectID: (snapshotData!.docs[index].data()as dynamic)['projectID'],));
             },
             child: Container(
-            margin: EdgeInsets.all(15),
+            margin: EdgeInsets.only(top:15, left:15, right: 15, bottom: 5),
             decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(10),

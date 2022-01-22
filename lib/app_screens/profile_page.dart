@@ -17,8 +17,10 @@ class _profilePage extends State<profilePage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.indigo,
+          backgroundColor: Colors.transparent,
           centerTitle: true,
           title: const Text("User Profile", style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold),),
         actions: [
@@ -27,7 +29,6 @@ class _profilePage extends State<profilePage>{
             label: Text('Logout', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             onPressed: (){
               AuthService.logout();
-
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (BuildContext context) => WelcomeScreen()),
@@ -38,7 +39,21 @@ class _profilePage extends State<profilePage>{
         ]
 
       ),
-      body: ProfileView(),
+      body: Stack(children: [
+        Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('assets/images/profilepage-ui.webp'),
+                    fit: BoxFit.cover))),
+        Container(
+            width: double.maxFinite,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(begin: Alignment.bottomCenter, colors: [
+                  Colors.black.withOpacity(0.8),
+                  Colors.black.withOpacity(0.7)
+                ]))),
+        SafeArea(child: ProfileView())
+      ])
     );
 
   }

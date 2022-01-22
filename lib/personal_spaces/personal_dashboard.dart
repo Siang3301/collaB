@@ -20,7 +20,7 @@ class personalDashboard extends StatelessWidget {
   );
   Items item3 = Items(
     title: "Project Summary Statistics",
-    subtitle: "Your Report Summary",
+    subtitle: "Your Summary Assistant",
     img: "assets/images/report.png",
   );
 

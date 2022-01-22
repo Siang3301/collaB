@@ -10,6 +10,7 @@ import 'package:collab/initial_components/already_have_an_account_acheck.dart';
 import 'package:collab/initial_components/rounded_button.dart';
 import 'package:collab/initial_components/rounded_input_field.dart';
 import 'package:collab/initial_components/rounded_password_field.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -73,21 +74,28 @@ class _LoginBody extends State<LoginBody> {
                 if (_formKey.currentState!.validate() &&
                 EmailValidator.validate(
                 _email.trim())) {
-                  String? user = await auth
-                      .signIn(
-                    email: _email.trim(),
-                    password: _password.trim(),
-                  );
-                  setState(() {});
-                  if (user != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('Login Successful'),));
-                          Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => bottomNavigationBar(),
-                      ),
-                    );
+                  try {
+                    final user = await auth.signIn(
+                        email: _email, password: _password);
+                    if (auth.getCurrentUID().isNotEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('Login Successful'),));
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => bottomNavigationBar(),
+                          ),
+                        );
+                    }else {
+                      Fluttertoast.showToast(
+                        backgroundColor: Colors.grey,
+                        msg: "Login failed, password or username does not match",
+                        gravity: ToastGravity.CENTER,
+                        fontSize: 16.0,
+                      );
+                    }
+                  } catch(e){
+                    print(e);
                   }
                 }
               },
@@ -155,27 +163,6 @@ class _LoginBody extends State<LoginBody> {
   }
 }
 
-Future navigateToHomePage(context) async {
-  final googleSignIn = GoogleSignIn();
-  final googleUser = await googleSignIn.signIn();
-  if (googleUser != null) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => bottomNavigationBar()));
-  }
-  else {
-    return;
-  }
-}
-
-void signInWithGoogle(BuildContext context) async {
-  final googleSignIn = GoogleSignIn();
-  final googleUser = await googleSignIn.signIn();
-  if (googleUser != null) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AuthenticatePage()));
-  }
-  else {
-    return;
-  }
-}
 
 
 

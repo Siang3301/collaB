@@ -184,15 +184,25 @@ class _HomePage extends State<HomePage>{
                                        child: Text("${index + 1}", style: TextStyle(color: Colors.white)),
                                      ),
                                    ),
-                                   title: dateToday.isAfter(DateTime.parse(user[index]['due_date'])) ?
-                                   Text('Task: ' + user[index]['task_name'] + ' (OVERDUE)',
+                                   title: DateTime.parse(user[index]['completeTime'].toDate().toString()).isBefore(DateTime.parse(user[index]['due_date'])) && user[index]['complete'] == true ?
+                                       Text('Task: ' + user[index]['task_name'],
                                        style: GoogleFonts.openSans(fontSize: 15,
                                            fontWeight: FontWeight.bold,
-                                           color: Colors.white))
-                                       : Text('Task: ' + user[index]['task_name'],
-                                       style: GoogleFonts.openSans(fontSize: 15,
-                                           fontWeight: FontWeight.bold,
-                                           color: Colors.white)),
+                                           color: Colors.white)):
+                                       dateToday.isAfter(DateTime.parse(user[index]['due_date'])) && user[index]['complete'] == false ?
+                                       Text('Task: ' + user[index]['task_name'] + ' (OVERDUE)',
+                                           style: GoogleFonts.openSans(fontSize: 15,
+                                               fontWeight: FontWeight.bold,
+                                               color: Colors.white)):
+                                       DateTime.parse(user[index]['completeTime'].toDate().toString()).isAfter(DateTime.parse(user[index]['due_date'])) && user[index]['complete'] == true ?
+                                       Text('Task: ' + user[index]['task_name'] + ' \n(Late Completion)',
+                                           style: GoogleFonts.openSans(fontSize: 15,
+                                               fontWeight: FontWeight.bold,
+                                               color: Colors.white)):
+                                       Text('Task: ' + user[index]['task_name'],
+                                           style: GoogleFonts.openSans(fontSize: 15,
+                                               fontWeight: FontWeight.bold,
+                                               color: Colors.white)),
                                    subtitle: Column(
                                        crossAxisAlignment: CrossAxisAlignment.start,
                                        children:[

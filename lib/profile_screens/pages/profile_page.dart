@@ -91,20 +91,20 @@ class _ProfileViewState extends State<ProfileView> {
                 decoration: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(
-                          color: kPrimaryColor,
+                          color: Colors.white70,
                           width: 1,
                         ))),
                 child: Row(children: [
                   Icon(
                     Icons.email,
-                    color: kPrimaryLightColor,
+                    color: Colors.white,
                   ),
                   Container(
                       margin: const EdgeInsets.only(left: 20.0),
                       child: Text(
                         // ignore: unnecessary_string_interpolations
                         "${thisuser.email ?? 'Anonymous'}",
-                        style: TextStyle(fontSize: 15, height: 1.4,fontFamily: 'Raleway',fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 15, height: 1.4,fontFamily: 'Raleway',fontWeight: FontWeight.bold,  color: Colors.white),
                       )),
                 ])),
             FutureBuilder(
@@ -120,14 +120,14 @@ class _ProfileViewState extends State<ProfileView> {
                     decoration: BoxDecoration(
                         border: Border(
                             bottom: BorderSide(
-                              color: kPrimaryColor,
+                              color: Colors.white70,
                               width: 1,
                             ))),
                     child: Row(
                       children: <Widget>[
                         Icon(
                           Icons.person,
-                          color: kPrimaryLightColor,
+                          color: Colors.white,
                         ),
                         Container(
                           width: 200,
@@ -135,7 +135,7 @@ class _ProfileViewState extends State<ProfileView> {
                           child: Text(
                             // ignore: unnecessary_string_interpolations
                             "${_userNameController.text}", softWrap: true,
-                            style: TextStyle(fontSize: 15, height: 1.4,fontFamily: 'Raleway',fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 15, height: 1.4,fontFamily: 'Raleway',fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                         ),
 
@@ -145,8 +145,8 @@ class _ProfileViewState extends State<ProfileView> {
                                 primary: Colors.blueGrey,
                                 alignment: Alignment.centerRight,
                               ),
-                          icon: Icon(Icons.keyboard_arrow_right),
-                          label: Text('editnow'),
+                          icon: Icon(Icons.keyboard_arrow_right, color: Colors.white),
+                          label: Text('editnow', style: TextStyle(color: Colors.white70)),
                           onPressed: () {
                             navigateSecondPage(EditNameFormPage());
                           },
@@ -169,21 +169,21 @@ class _ProfileViewState extends State<ProfileView> {
                     decoration: BoxDecoration(
                         border: Border(
                             bottom: BorderSide(
-                              color: kPrimaryColor,
+                              color: Colors.white70,
                               width: 1,
                             ))),
                     child: Row(
                       children: <Widget>[
                         Icon(
                           Icons.phone,
-                          color: kPrimaryLightColor,
+                          color: Colors.white,
                         ),
                         Container(
                           margin: const EdgeInsets.only(left: 20.0),
                           child: Text(
                             // ignore: unnecessary_string_interpolations
                             "${_userPhoneController.text}",
-                            style: TextStyle(fontSize: 15, height: 1.4,fontFamily: 'Raleway',fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 15, height: 1.4,fontFamily: 'Raleway',fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                         ),
                         Expanded(
@@ -192,8 +192,8 @@ class _ProfileViewState extends State<ProfileView> {
                                 primary: Colors.blueGrey,
                                 alignment: Alignment.centerRight,
                               ),
-                              icon: Icon(Icons.keyboard_arrow_right),
-                              label: Text('editnow'),
+                              icon: Icon(Icons.keyboard_arrow_right, color: Colors.white),
+                              label: Text('editnow', style: TextStyle(color: Colors.white70)),
                               onPressed: () {
                                 navigateSecondPage(EditPhoneFormPage());
                               },
@@ -217,14 +217,14 @@ class _ProfileViewState extends State<ProfileView> {
                     decoration: BoxDecoration(
                         border: Border(
                             bottom: BorderSide(
-                              color: kPrimaryColor,
+                              color: Colors.white70,
                               width: 1,
                             ))),
                     child: Row(
                       children: <Widget>[
                         Icon(
                           Icons.work,
-                          color: kPrimaryLightColor,
+                          color: Colors.white,
                         ),
                         Container(
                             width: 200,
@@ -233,7 +233,7 @@ class _ProfileViewState extends State<ProfileView> {
                             // ignore: unnecessary_string_interpolations
                             "${_userBioController.text}",
                             textAlign: TextAlign.left,
-                            style: TextStyle(fontSize: 15, height: 1.4,fontFamily: 'Raleway',fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 15, height: 1.4,fontFamily: 'Raleway',fontWeight: FontWeight.bold,  color: Colors.white),
                           ),
                         ),
                         Expanded(
@@ -242,8 +242,8 @@ class _ProfileViewState extends State<ProfileView> {
                                 primary: Colors.blueGrey,
                                 alignment: Alignment.centerRight,
                               ),
-                              icon: Icon(Icons.keyboard_arrow_right),
-                              label: Text('editnow'),
+                              icon: Icon(Icons.keyboard_arrow_right, color: Colors.white),
+                              label: Text('editnow', style: TextStyle(color: Colors.white70)),
                               onPressed: () {
                                 navigateSecondPage(EditDescriptionFormPage());
                               },

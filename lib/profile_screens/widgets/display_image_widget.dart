@@ -31,15 +31,17 @@ class DisplayImage extends StatelessWidget {
   Widget buildImage(Color color) {
     return CircleAvatar(
       radius: 75,
-      backgroundColor: color,
+      backgroundColor: Colors.white70,
       child: Center(
         child: imagePath == ''
             ? CircleAvatar(
           radius: 75.0,
+          backgroundColor: Colors.white.withOpacity(0.3),
           child: Icon(Icons.photo_camera),
         )
             : CircleAvatar(
           radius: 75.0,
+          backgroundColor: Colors.white.withOpacity(0.3),
           backgroundImage: NetworkImage(imagePath),
         ),
       ),
@@ -62,9 +64,9 @@ class DisplayImage extends StatelessWidget {
   }) =>
       ClipOval(
           child: Container(
-        padding: EdgeInsets.all(all),
-        color: Colors.white,
-        child: child,
+          padding: EdgeInsets.all(all),
+          color: Colors.white,
+          child: child,
       ));
 }
 
