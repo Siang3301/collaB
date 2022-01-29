@@ -36,6 +36,7 @@ class _projectSettings extends State<projectSettings> {
   final TextEditingController _emailController = TextEditingController();
   final double minValue = 8.0;
   int experienceIndex = 0;
+  String creator = '';
 
   final TextStyle _errorStyle = TextStyle(
     color: Colors.red,
@@ -79,6 +80,7 @@ class _projectSettings extends State<projectSettings> {
             "isAdmin": value.data()!["members"][i]["isAdmin"]
           });
         }
+        creator = value['project creator'];
       });
     });
   }
@@ -515,6 +517,7 @@ class _projectSettings extends State<projectSettings> {
           'timestamp': time,
           "project start": dateRange!.start.toString(),
           "project end": dateRange!.end.add(Duration(hours: 23, minutes : 59, seconds : 59)).toString(),
+          "project creator": creator,
           'isAdmin': false,
         });
       }

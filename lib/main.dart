@@ -17,7 +17,9 @@ import 'package:collab/widgets/provider_widgets.dart';
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options:  FirebaseOptions(
+      apiKey: "AIzaSyA6sY7mXhIXUtzVVJP4PuqgVDdZ33xPvmc", appId: "1:705221055670:android:e274a87ac869affb780217",
+      messagingSenderId: "705221055670", projectId: "collab-signin", storageBucket: "gs://collab-signin.appspot.com"));
 
   runApp(Collab());
 }

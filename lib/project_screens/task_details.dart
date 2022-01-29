@@ -360,13 +360,14 @@ class _taskDetails extends State<taskDetails> {
                           Icons.email, color: Colors.indigoAccent,
                         ),
                         Container(
-                            width:250,
+                            width: 200,
                             margin: const EdgeInsets.only(left: 10.0),
                             child: Text(
                               assignee?['assignee_email'] ?? assignee?['email'] ?? 'Anonymous', softWrap: true,
                               style: TextStyle(fontSize: 15, color: Colors.black,fontFamily: 'Raleway',fontWeight: FontWeight.bold),
                             )),
-                        Container(
+                        Flexible(
+                        child:Container(
                             alignment: Alignment.centerRight,
                             child: TextButton.icon(
                               style: TextButton.styleFrom(
@@ -471,7 +472,7 @@ class _taskDetails extends State<taskDetails> {
                                             );
                                           });});
                               },
-                            )),
+                            )),)
                       ]
                   ),
                 ]

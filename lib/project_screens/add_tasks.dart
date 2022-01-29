@@ -237,7 +237,7 @@ class _AddTasks extends State<AddTasks> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(backgroundColor: Colors.indigo, title: Text('New Tasks')),
+      appBar: AppBar(backgroundColor: Color(0xFF616161), title: Text('New Tasks', style: TextStyle(fontFamily: 'Raleway'),)),
       body: Form(
           key: _formKey,
           child:SingleChildScrollView(
@@ -391,12 +391,14 @@ class _AddTasks extends State<AddTasks> {
                   Icon(
                     Icons.email, color: Colors.indigoAccent,
                   ),
-                  Container(
+                  Flexible(
+                      child:  Container(
                       margin: const EdgeInsets.only(left: 10.0),
                       child: Text(
-                        assignee?['assignee_email'] ?? assignee?['email'] ?? 'Unassigned',
+                        assignee?['assignee_email'] ?? assignee?['email'] ?? 'Unassigned', softWrap: true,
                         style: TextStyle(fontSize: 15, color: Colors.black,fontFamily: 'Raleway',fontWeight: FontWeight.bold),
                       )),
+                  )
                 ],
               ),
               ),

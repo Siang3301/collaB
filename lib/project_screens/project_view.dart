@@ -77,7 +77,7 @@ class _Projectview extends State<Projectview> {
                             color: Colors.white.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: Colors.lightBlue)),
-                        height: 90,
+                        height: 110,
                         child: Row(
                           children: [
                             Container(
@@ -85,7 +85,8 @@ class _Projectview extends State<Projectview> {
                               child: Icon(Icons.groups_rounded, size: 30,
                                   color: Colors.white),
                             ),
-                            Column(
+                            Flexible(
+                            child:Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -102,11 +103,16 @@ class _Projectview extends State<Projectview> {
                                       style:
                                       GoogleFonts.roboto(
                                           fontSize: 15, color: Colors.white)),
-                                  Text('Created by: ' + docs[index]['project creator'],
+                                  Text('Created by: ',
                                       style:
                                       GoogleFonts.roboto(
-                                      fontSize: 15, color: Colors.white)),
+                                      fontSize: 15, color: Colors.white, decoration: TextDecoration.underline)),
+                                  Text(docs[index]['project creator'], softWrap: true,
+                                      style:
+                                      GoogleFonts.roboto(
+                                          fontSize: 15, color: Colors.greenAccent)),
                                 ]),
+                            )
                           ],
                         ),
                       ),

@@ -99,13 +99,15 @@ class _ProfileViewState extends State<ProfileView> {
                     Icons.email,
                     color: Colors.white,
                   ),
-                  Container(
+                  Flexible(
+                      child:Container(
+                      width: 240,
                       margin: const EdgeInsets.only(left: 20.0),
                       child: Text(
                         // ignore: unnecessary_string_interpolations
                         "${thisuser.email ?? 'Anonymous'}",
                         style: TextStyle(fontSize: 15, height: 1.4,fontFamily: 'Raleway',fontWeight: FontWeight.bold,  color: Colors.white),
-                      )),
+                      )),)
                 ])),
             FutureBuilder(
                 future: _getProfileData(),

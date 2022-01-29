@@ -22,7 +22,7 @@ AppBar buildAppBar(BuildContext context, String title, String description, Strin
         ),
           //list if widget in appbar actions
           child:PopupMenuButton<int>(//don't specify icon if you want 3 dot menu
-            color: Colors.blue,
+            color: Color(0xFFBDBDBD).withOpacity(0.9),
             onSelected: (item) => onClicked(context, item, projectID, membersList, title, description),
             itemBuilder: (context) => [
               PopupMenuItem<int>(
@@ -34,7 +34,7 @@ AppBar buildAppBar(BuildContext context, String title, String description, Strin
                 value: 1,
                 child: Row(
                   children: const [
-                    Icon(Icons.search, color: Colors.white),
+                    Icon(Icons.search, color: Colors.black),
                     SizedBox(width: 8),
                     Text("Search",style: TextStyle(color: Colors.black, fontFamily: 'Raleway'),),
                   ],

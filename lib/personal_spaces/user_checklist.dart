@@ -118,7 +118,7 @@ class _userChecklist extends State<userChecklist> {
 
   makeListTile(Todo todo, index) {
     return ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 13.0),
         leading: Container(
           padding: EdgeInsets.only(right: 12.0),
           decoration: BoxDecoration(

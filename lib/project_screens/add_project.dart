@@ -234,7 +234,7 @@ class _AddProject extends State<AddProject> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(backgroundColor: Colors.indigo, title: Text('New Projects', style: TextStyle(fontFamily:'Raleway'),)),
+      appBar: AppBar(backgroundColor: Color(0xFF616161), title: Text('New Projects', style: TextStyle(fontFamily:'Raleway'),)),
       body: Form(
           key: _formKey,
           child:SingleChildScrollView(

@@ -86,16 +86,14 @@ class _LoginBody extends State<LoginBody> {
                             builder: (context) => bottomNavigationBar(),
                           ),
                         );
-                    }else {
-                      Fluttertoast.showToast(
-                        backgroundColor: Colors.grey,
-                        msg: "Login failed, password or username does not match",
-                        gravity: ToastGravity.CENTER,
-                        fontSize: 16.0,
-                      );
                     }
                   } catch(e){
-                    print(e);
+                    Fluttertoast.showToast(
+                      backgroundColor: Colors.grey,
+                      msg: "Login failed, password or username does not match",
+                      gravity: ToastGravity.CENTER,
+                      fontSize: 16.0,
+                    );
                   }
                 }
               },

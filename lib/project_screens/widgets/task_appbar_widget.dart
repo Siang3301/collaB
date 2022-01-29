@@ -38,7 +38,7 @@ AppBar buildAppBar(BuildContext context, String projectID, String taskID, bool s
               value: 0,
               child: Row(
                 children: const [
-                  Icon(Icons.search, color: Colors.white),
+                  Icon(Icons.search, color: Colors.black),
                   SizedBox(width: 8),
                   Text("Search",style: TextStyle(color: Colors.black, fontFamily: 'Raleway'),),
                 ],
