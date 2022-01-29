@@ -14,13 +14,13 @@ class personalDashboard extends StatelessWidget {
       img: "assets/images/todo.png");
 
   Items item2 = Items(
-    title: "Calender &\n Schedule",
+    title: "Calendar &\n Schedule",
     subtitle: "Your Time Manager",
     img: "assets/images/calendar.png",
   );
   Items item3 = Items(
     title: "Project Summary Statistics",
-    subtitle: "Your Report Summary",
+    subtitle: "Your Summary Assistant",
     img: "assets/images/report.png",
   );
 

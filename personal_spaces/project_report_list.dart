@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collab/personal_spaces/report_summary.dart';
 import 'package:collab/personal_spaces/statistics/stats_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -84,36 +83,42 @@ class _reportList extends State<reportList> {
                               color: Colors.white.withOpacity(0.3),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(color: Colors.lightBlue)),
-                          height: 90,
+                          height: 110,
                           child: Row(
                             children: [
                               Container(
                                 margin: EdgeInsets.only(left: 20, right: 30),
-                                child: Icon(Icons.assignment, size: 30,
+                                child: Icon(Icons.groups_rounded, size: 30,
                                     color: Colors.white),
                               ),
-                              Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(docs[index]['title'],
-                                        style:
-                                        GoogleFonts.montserrat(fontSize: 20,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white)),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text('Start: ' +
-                                        DateFormat.yMd().format(start) + ' ,' + ' End: ' + DateFormat.yMd().format(end),
-                                        style:
-                                        GoogleFonts.roboto(
-                                            fontSize: 15, color: Colors.white)),
-                                    Text('Created by: ' + docs[index]['project creator'],
-                                        style:
-                                        GoogleFonts.roboto(
-                                            fontSize: 15, color: Colors.white)),
-                                  ]),
+                              Flexible(
+                                child:Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(docs[index]['title'],
+                                          style:
+                                          GoogleFonts.montserrat(fontSize: 20,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white)),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text('Start: ' +
+                                          DateFormat.yMd().format(start) + ' ,' + ' End: ' + DateFormat.yMd().format(end),
+                                          style:
+                                          GoogleFonts.roboto(
+                                              fontSize: 15, color: Colors.white)),
+                                      Text('Created by: ',
+                                          style:
+                                          GoogleFonts.roboto(
+                                              fontSize: 15, color: Colors.white, decoration: TextDecoration.underline)),
+                                      Text(docs[index]['project creator'], softWrap: true,
+                                          style:
+                                          GoogleFonts.roboto(
+                                              fontSize: 15, color: Colors.greenAccent)),
+                                    ]),
+                              )
                             ],
                           ),
                         ),

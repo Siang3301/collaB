@@ -61,7 +61,7 @@ class _TodoViewState extends State<TodoView> {
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelStyle: TextStyle(color: Colors.white),
-                      labelText: "Title",
+                      labelText: "What do you want to remember? ",
                       fillColor: Colors.white.withOpacity(0.3),
                       filled: true,
                       border: OutlineInputBorder(
@@ -86,7 +86,7 @@ class _TodoViewState extends State<TodoView> {
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelStyle: TextStyle(color: Colors.white),
-                      labelText: "Description",
+                      labelText: "Any description for it?",
                       fillColor: Colors.white.withOpacity(0.3),
                       filled: true,
                       border: OutlineInputBorder(

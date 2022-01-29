@@ -17,6 +17,7 @@ class statChart extends StatefulWidget {
 class _statChart extends State<statChart> {
   List<Task> seriesList = []; int upper = 0;
   List<DateTime> mydata = [];
+  String currentWeek = '';
   int mon = 0, tue = 0, wed = 0, thu = 0, fri = 0, sat = 0, sun = 0;
   DateTime date = DateTime.now(); late DateTime monday; late DateTime tuesday; late DateTime wednesday; late DateTime thursday; late DateTime friday;
   late DateTime saturday; late DateTime sunday;
@@ -129,11 +130,12 @@ class _statChart extends State<statChart> {
     DateTime now = DateTime.now();
     DateTime currentDate = DateTime(now.year, now.month, now.day);
     int currentDay = currentDate.weekday;
-    DateTime dayBeforenewWeek = currentDate.subtract(Duration(days: currentDay-1));
+    DateTime currentWeekFirstDay = currentDate.subtract(Duration(days: currentDay-1));
     DateTime dayAfternewWeek = currentDate.add(Duration(days: DateTime.daysPerWeek - currentDate.weekday + 1));
-
+    DateTime lastDayWeek = currentDate.add(Duration(days: DateTime.daysPerWeek - currentDate.weekday));
+    currentWeek = DateFormat.Md().format(currentWeekFirstDay) + '-' + DateFormat.Md().format(lastDayWeek);
     for(int i = 0; i<allData.length; i++){
-      if(DateTime.parse((allData[i] as dynamic)['completeTime'].toDate().toString()).isAfter(dayBeforenewWeek)
+      if(DateTime.parse((allData[i] as dynamic)['completeTime'].toDate().toString()).isAfter(currentWeekFirstDay)
         && DateTime.parse((allData[i] as dynamic)['completeTime'].toDate().toString()).isBefore(dayAfternewWeek)) {
         if ((allData[i] as dynamic)['complete'] == true) {
           int tempDay = DateTime
@@ -217,7 +219,7 @@ class _statChart extends State<statChart> {
               SizedBox(
                 height: 10.0,
               ),
-              Text('Task completed per Day', style: TextStyle(fontSize: 20, color: Colors.black, fontFamily: 'Raleway', fontWeight: FontWeight.bold)),
+              Text('Task completed per Day ($currentWeek)', style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Raleway', fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 10.0,
               ),
