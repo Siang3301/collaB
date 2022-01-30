@@ -3,7 +3,6 @@ import 'package:collab/constants.dart';
 import 'package:collab/project_screens/widgets/button_widget.dart';
 import 'package:collab/widgets/provider_widgets.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -26,6 +25,7 @@ class _projectSettings extends State<projectSettings> {
   bool isLoading = false;
   Map<String, dynamic>? userMap;
   List<Map<String, dynamic>> membersList = [];
+  List<Map<String, dynamic>> currentTask = [];
   List<Map<String, dynamic>> currentMember = [];
   List<Map<String, dynamic>> newMembers = [];
   List<Map<String, dynamic>> removeMembers = [];
@@ -48,6 +48,7 @@ class _projectSettings extends State<projectSettings> {
     super.initState();
     getCurrentMembers();
     getCurrentProjectDurations();
+    getCurrentTasks();
     projectTitleController.text = widget.title;
     descriptionController.text = widget.description;
   }
@@ -103,6 +104,32 @@ class _projectSettings extends State<projectSettings> {
       });
     });
   }
+
+  void getCurrentTasks() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    QuerySnapshot querySnapshot = await db.collection('projects').doc(widget.projectID).collection('tasks').get();
+    final allTasks = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    for(int i = 0; i<allTasks.length; i++){
+      setState(() {
+        currentTask.add({
+          "task_name": (allTasks[i] as dynamic)['task_name'],
+          "task_desc": (allTasks[i] as dynamic)['task_desc'],
+          "assignee_name" : (allTasks[i] as dynamic)['assignee_name'],
+          "assignee_email": (allTasks[i] as dynamic)['assignee_email'],
+          'time': (allTasks[i] as dynamic)['time'],
+          'completeTime': (allTasks[i] as dynamic)['completeTime'],
+          "due_date" : (allTasks[i] as dynamic)['due_date'],
+          "complete" : (allTasks[i] as dynamic)['complete'],
+          "projectID": (allTasks[i] as dynamic)['projectID'],
+          "taskID": (allTasks[i] as dynamic)['taskID'],
+        });
+      });
+    }
+
+  }
+
 
   Widget _buildName() {
     return Padding(
@@ -520,6 +547,28 @@ class _projectSettings extends State<projectSettings> {
           "project creator": creator,
           'isAdmin': false,
         });
+
+        //assign current event data
+        if(currentTask.isNotEmpty) {
+          for(int i = 0; i<currentTask.length; i++) {
+            await db.collection('users_data')
+                .doc(uid)
+                .collection('event_data')
+                .doc(currentTask[i]['taskID'])
+                .set({
+              "task_name": currentTask[i]['task_name'],
+              "task_desc": currentTask[i]['task_desc'],
+              "assignee_name": currentTask[i]['assignee_name'],
+              "assignee_email": currentTask[i]['assignee_email'],
+              'time': currentTask[i]['time'],
+              'completeTime': currentTask[i]['completeTime'],
+              "due_date": currentTask[i]['due_date'],
+              "complete": currentTask[i]['complete'],
+              "projectID": currentTask[i]['projectID'],
+              "taskID": currentTask[i]['taskID'],
+            });
+          }
+        }
       }
     }
 
@@ -533,6 +582,17 @@ class _projectSettings extends State<projectSettings> {
             .collection('users_project')
             .doc(widget.projectID)
             .delete();
+
+        //delete current event data
+        if(currentTask.isNotEmpty) {
+          for(int i = 0; i<currentTask.length; i++) {
+            await db.collection('users_data')
+                .doc(uid)
+                .collection('event_data')
+                .doc(currentTask[i]['taskID'])
+                .delete();
+          }
+        }
       }
     }
   }
